@@ -3,149 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interview Drill — Node.js &amp; React.js</title>
+<title>Interview Drill — Multi-Subject Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css" id="hljsLight">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" id="hljsDark" disabled>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          page: '#FFFFFF',
-          panel: '#FFFFFF',
-          panel2: '#F6F7F9',
-          line: '#E4E7EC',
-          amber: '#B45309',
-          amberSoft: '#FEF3E2',
-          done: '#15803D',
-          doneSoft: '#EAF7EE',
-          ink: '#14181F',
-          muted: '#68707C',
-        },
-        fontFamily: {
-          mono: ['"IBM Plex Mono"', 'monospace'],
-          sans: ['Inter', 'sans-serif'],
-        }
-      }
-    }
-  }
+  tailwind.config = { theme: { extend: {
+    fontFamily: { mono: ['"IBM Plex Mono"', 'monospace'], sans: ['Inter', 'sans-serif'] }
+  } } }
 </script>
 <style>
-  * { scrollbar-width: thin; scrollbar-color: #E4E7EC transparent; }
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-thumb { background: #E4E7EC; border-radius: 8px; }
-
-  body {
-    background-color: #FFFFFF;
-    background-image: radial-gradient(circle at 12% 0%, rgba(180,83,9,0.05), transparent 42%);
+  :root {
+    --bg: #FFFFFF; --surface: #FFFFFF; --surface2: #F6F7F9; --line: #E4E7EC;
+    --ink: #14181F; --mute: #68707C; --accent: #B45309; --accentSoft: #FEF3E2;
+    --done: #15803D; --doneSoft: #EAF7EE; --danger: #DC2626;
   }
+  html.dark {
+    --bg: #0B1120; --surface: #121B2E; --surface2: #0F1729; --line: #223049;
+    --ink: #E8EAED; --mute: #8B98AE; --accent: #FFB000; --accentSoft: rgba(255,176,0,0.12);
+    --done: #4ADE80; --doneSoft: rgba(74,222,128,0.12); --danger: #F87171;
+  }
+  * { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
+
+  body { background-color: var(--bg); color: var(--ink); transition: background-color .25s, color .25s; }
+  .bg-app{background-color:var(--bg);} .bg-surface{background-color:var(--surface);}
+  .bg-surface2{background-color:var(--surface2);} .border-app{border-color:var(--line);}
+  .text-app{color:var(--ink);} .text-mute{color:var(--mute);} .text-accent{color:var(--accent);}
+  .bg-accent{background-color:var(--accent);} .bg-accent-soft{background-color:var(--accentSoft);}
+  .border-accent{border-color:var(--accent);} .text-success{color:var(--done);}
+  .border-success{border-color:var(--done);} .bg-success-soft{background-color:var(--doneSoft);}
+  .text-danger{color:var(--danger);}
 
   .dot { animation: flicker 5s infinite; }
-  @keyframes flicker {
-    0%, 96%, 100% { opacity: 1; }
-    97% { opacity: 0.6; }
-    98% { opacity: 1; }
-  }
+  @keyframes flicker { 0%,96%,100%{opacity:1;} 97%{opacity:.5;} 98%{opacity:1;} }
+  .cursor-blink::after{content:'';display:inline-block;width:.5em;height:1em;background:var(--accent);margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
 
-  .cursor-blink::after {
-    content: '';
-    display: inline-block;
-    width: 0.55em;
-    height: 1em;
-    background: #B45309;
-    margin-left: 4px;
-    vertical-align: -2px;
-    animation: blink 1s steps(1) infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
+  pre code.hljs{background:transparent !important;padding:0 !important;font-size:.8rem;line-height:1.65;}
+  .code-shell{background:var(--surface2);border:1px solid var(--line);}
 
-  pre code.hljs {
-    background: transparent !important;
-    padding: 0 !important;
-    font-size: 0.82rem;
-    line-height: 1.65;
-  }
-  .code-shell {
-    background: #F6F7F9;
-    border: 1px solid #E4E7EC;
-  }
+  .flip-card{perspective:1000px;}
+  .flip-inner{position:relative;transition:transform .5s;transform-style:preserve-3d;}
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+  .flip-back{transform:rotateY(180deg);}
 
-  .flip-card { perspective: 1000px; }
-  .flip-inner { transition: transform 0.5s; transform-style: preserve-3d; }
-  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
-  .flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .flip-back { transform: rotateY(180deg); }
+  @media (prefers-reduced-motion: reduce){.dot,.cursor-blink::after,.flip-inner{animation:none !important;transition:none !important;}}
 
-  @media (prefers-reduced-motion: reduce) {
-    .dot, .cursor-blink::after, .flip-inner { animation: none !important; transition: none !important; }
-  }
+  .side-item.active{background:var(--accentSoft);border-color:var(--accent);}
+  .side-item.is-done .num-badge{background:var(--doneSoft);border-color:var(--done);color:var(--done);}
+  .subject-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600;}
+  .chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
-  .side-item.active { background: #FEF3E2; border-color: #B45309; }
-  .side-item.is-done .num-badge { background: #EAF7EE; border-color: #15803D; color: #15803D; }
-
-  input:focus, button:focus, select:focus {
-    outline: 2px solid #B45309;
-    outline-offset: 2px;
-  }
+  input:focus, button:focus, select:focus{outline:2px solid var(--accent);outline-offset:2px;}
 </style>
 </head>
-<body class="bg-page text-ink min-h-screen font-sans">
+<body class="min-h-screen font-sans">
 
-<div id="boot" class="fixed inset-0 z-50 bg-white flex items-center justify-center font-mono text-amber">
-  <div class="text-center px-6">
-    <p id="bootLine" class="text-sm sm:text-base tracking-wide">&gt; initializing interview_prep.exe<span class="cursor-blink"></span></p>
-  </div>
+<div id="boot" class="fixed inset-0 z-50 bg-app flex items-center justify-center font-mono text-accent">
+  <p class="text-sm sm:text-base tracking-wide">&gt; initializing interview_prep.exe<span class="cursor-blink"></span></p>
 </div>
 
-<div id="app" class="opacity-0 transition-opacity duration-500">
+<div id="appRoot" class="opacity-0 transition-opacity duration-500">
 
-  <header class="border-b border-line bg-white/90 backdrop-blur sticky top-0 z-40">
+  <header class="border-b border-app bg-app/90 backdrop-blur sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-3 justify-between">
       <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-amber dot"></span>
-        <h1 class="font-mono font-semibold text-sm sm:text-base tracking-tight text-ink">
-          REEHAN<span class="text-muted">_</span>PREP<span class="text-amber">.exe</span>
+        <span class="w-2.5 h-2.5 rounded-full bg-accent dot"></span>
+        <h1 class="font-mono font-semibold text-sm sm:text-base tracking-tight">
+          REEHAN<span class="text-mute">_</span>PREP<span class="text-accent">.exe</span>
         </h1>
-        <span class="hidden sm:inline text-xs text-muted font-mono ml-2">General Node.js &amp; React.js interview bank</span>
+        <span class="hidden lg:inline text-xs text-mute font-mono ml-2">Multi-subject interview question bank</span>
       </div>
 
-      <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2 font-mono text-sm bg-panel2 border border-line rounded-lg px-3 py-1.5">
-          <span id="timerDisplay" class="text-amber font-semibold text-base w-[52px] text-center">15:00</span>
-          <button id="timerToggle" class="text-xs px-2 py-1 rounded border border-line hover:border-amber hover:text-amber transition-colors">Start</button>
-          <button id="timerReset" class="text-xs px-2 py-1 rounded border border-line hover:border-amber hover:text-amber transition-colors">Reset</button>
-          <select id="timerSelect" class="bg-white text-xs border border-line rounded px-1 py-1 text-muted hover:text-ink">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="flex items-center gap-2 font-mono text-sm bg-surface2 border border-app rounded-lg px-3 py-1.5">
+          <span id="timerDisplay" class="text-accent font-semibold text-base w-[52px] text-center">15:00</span>
+          <button id="timerToggle" class="text-xs px-2 py-1 rounded border border-app hover:border-accent hover:text-accent transition-colors">Start</button>
+          <button id="timerReset" class="text-xs px-2 py-1 rounded border border-app hover:border-accent hover:text-accent transition-colors">Reset</button>
+          <select id="timerSelect" class="bg-transparent text-xs border border-app rounded px-1 py-1 text-mute">
             <option value="900">15 min</option>
             <option value="600">10 min</option>
             <option value="300">5 min</option>
           </select>
         </div>
+        <button id="themeToggle" class="w-9 h-9 shrink-0 rounded-lg border border-app hover:border-accent flex items-center justify-center text-sm transition-colors" title="Toggle dark/light mode" aria-label="Toggle theme">🌙</button>
       </div>
     </div>
 
-    <div class="h-1 bg-line/60 w-full">
-      <div id="progressBar" class="h-1 bg-amber transition-all duration-500" style="width:0%"></div>
+    <div class="h-1 bg-app w-full border-t border-app/0">
+      <div id="progressBar" class="h-1 bg-accent transition-all duration-500" style="width:0%"></div>
     </div>
   </header>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
 
-    <aside class="md:sticky md:top-[86px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
-      <div class="grid grid-cols-3 gap-1.5 mb-4 font-mono text-xs">
-        <button data-view="node" class="round-tab px-2 py-2 rounded-lg border border-line bg-white hover:border-amber transition-colors">Node.js</button>
-        <button data-view="react" class="round-tab px-2 py-2 rounded-lg border border-line bg-white hover:border-amber transition-colors">React.js</button>
-        <button data-view="sheet" class="round-tab px-2 py-2 rounded-lg border border-line bg-white hover:border-amber transition-colors">Cheat Sheet</button>
-      </div>
+    <aside class="md:sticky md:top-[92px] md:self-start md:max-h-[calc(100vh-104px)] md:overflow-y-auto">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-1.5 mb-4 font-mono text-[11px] sm:text-xs" id="subjectTabs"></div>
 
       <div class="relative mb-3">
-        <input id="searchBox" type="text" placeholder="Search problems…" class="w-full bg-white border border-line rounded-lg pl-3 pr-3 py-2 text-sm placeholder:text-muted focus:border-amber transition-colors">
+        <input id="searchBox" type="text" placeholder="Search problems…" class="w-full bg-surface border border-app rounded-lg pl-3 pr-3 py-2 text-sm placeholder:text-mute focus:border-accent transition-colors">
       </div>
 
-      <p class="text-[11px] uppercase tracking-widest text-muted font-mono mb-2 px-1">Progress: <span id="progressText" class="text-amber">0 / 0</span></p>
+      <p class="text-[11px] uppercase tracking-widest text-mute font-mono mb-2 px-1">Progress: <span id="progressText" class="text-accent">0 / 0</span></p>
 
       <nav id="questionList" class="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0"></nav>
     </aside>
@@ -154,67 +120,45 @@
 
   </div>
 
-  <footer class="max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-4 text-center text-xs text-muted font-mono">
-    &gt; general practice bank — kisi bhi Node/React interview ke liye use karo.
+  <footer class="max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-4 text-center text-xs text-mute font-mono">
+    &gt; general practice bank — kisi bhi interview ke liye use karo.
   </footer>
 </div>
 
 <script>
-/* ============ DATA ============ */
+/* ============================= DATA ============================= */
+const SUBJECTS = [
+  { id: 'node', label: 'Node.js' },
+  { id: 'react', label: 'React.js' },
+  { id: 'js', label: 'JavaScript' },
+  { id: 'python', label: 'Python' },
+  { id: 'java', label: 'Java' },
+  { id: 'sql', label: 'SQL' },
+  { id: 'sheet', label: 'Cheat Sheet' },
+];
+
 const nodeQuestions = [
-  {
-    title: 'Remove Duplicates from an Array',
-    problem: 'Given an array with repeated values, return a new array with only unique values.',
-    code: `function removeDuplicates(arr) {
+{title:'Remove Duplicates from an Array',problem:'Given an array with repeated values, return a new array with only unique values.',code:`function removeDuplicates(arr) {
   return [...new Set(arr)];
 }
-
-console.log(removeDuplicates([1, 2, 2, 3, 3, 4]));
-// [1, 2, 3, 4]`,
-    notes: 'Set stores only unique values automatically. Spread (...) turns the Set back into a plain array.'
-  },
-  {
-    title: 'Word Frequency Count',
-    problem: 'Given a sentence, count how many times each word appears.',
-    code: `function wordCount(str) {
+console.log(removeDuplicates([1,2,2,3,3,4])); // [1,2,3,4]`,notes:'Set stores only unique values; spread turns it back into an array.'},
+{title:'Word Frequency Count',problem:'Count how many times each word appears in a sentence.',code:`function wordCount(str) {
   const words = str.toLowerCase().split(' ');
   const count = {};
-  for (const w of words) {
-    count[w] = (count[w] || 0) + 1;
-  }
+  for (const w of words) count[w] = (count[w] || 0) + 1;
   return count;
 }
-
-console.log(wordCount('the cat sat on the mat'));
-// { the: 2, cat: 1, sat: 1, on: 1, mat: 1 }`,
-    notes: '(count[w] || 0) + 1 is the key trick — if word not seen yet, start at 0, then add 1.'
-  },
-  {
-    title: 'Palindrome Check',
-    problem: 'Check whether a given string reads the same forwards and backwards (ignore case, spaces, punctuation).',
-    code: `function isPalindrome(str) {
+console.log(wordCount('the cat sat on the mat'));`,notes:'(count[w] || 0) + 1 handles the first-time-seen case.'},
+{title:'Palindrome Check',problem:'Check if a string reads the same forwards and backwards.',code:`function isPalindrome(str) {
   const clean = str.toLowerCase().replace(/[^a-z0-9]/g, '');
   return clean === clean.split('').reverse().join('');
 }
-
-console.log(isPalindrome('A man a plan a canal Panama')); // true`,
-    notes: 'replace(/[^a-z0-9]/g, "") strips everything that is not a letter or digit before comparing.'
-  },
-  {
-    title: 'Reverse a String',
-    problem: 'Reverse "hello" to "olleh".',
-    code: `function reverseString(str) {
+console.log(isPalindrome('A man a plan a canal Panama')); // true`,notes:'Strip non-alphanumeric characters before comparing.'},
+{title:'Reverse a String',problem:'Reverse "hello" to "olleh".',code:`function reverseString(str) {
   return str.split('').reverse().join('');
 }
-
-console.log(reverseString('hello'));
-// olleh`,
-    notes: 'split("") → array of characters, reverse() → flips order, join("") → back to string.'
-  },
-  {
-    title: 'Async/Await — Fetch User',
-    problem: 'Fetch user data from an API and print the result, handling errors.',
-    code: `async function getUser() {
+console.log(reverseString('hello')); // olleh`,notes:'split → reverse → join is the standard one-liner.'},
+{title:'Async/Await — Fetch User',problem:'Fetch user data and handle errors with try/catch.',code:`async function getUser() {
   try {
     const response = await fetch('https://api.example.com/user');
     const data = await response.json();
@@ -222,854 +166,983 @@ console.log(reverseString('hello'));
   } catch (error) {
     console.log('Error:', error);
   }
-}
-
-getUser();`,
-    notes: 'async marks a function as asynchronous. await pauses until the Promise resolves. Always wrap in try/catch.'
-  },
-  {
-    title: 'Promise — Delayed Data',
-    problem: 'Return "Data received" after a 2 second delay using a Promise.',
-    code: `function getData() {
+}`,notes:'await pauses until the Promise resolves; always wrap in try/catch.'},
+{title:'Promise — Delayed Data',problem:'Return "Data received" after a 2 second delay.',code:`function getData() {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve('Data received');
-    }, 2000);
+    setTimeout(() => resolve('Data received'), 2000);
   });
 }
-
-getData().then((data) => {
-  console.log(data);
-});`,
-    notes: 'resolve() = success path, reject() = error path. .then() runs once resolve() fires.'
-  },
-  {
-    title: 'Callback Pattern',
-    problem: 'Run a second function only after the first one finishes.',
-    code: `function getUser(callback) {
-  setTimeout(() => {
-    callback('User found');
-  }, 1000);
+getData().then((data) => console.log(data));`,notes:'resolve() = success path, reject() = error path.'},
+{title:'Callback Pattern',problem:'Run a second function only after the first finishes.',code:`function getUser(callback) {
+  setTimeout(() => callback('User found'), 1000);
 }
-
-getUser((message) => {
-  console.log(message);
-});`,
-    notes: 'Callback = a function passed as an argument, called later once the async work is done.'
-  },
-  {
-    title: 'Sequential vs Parallel Async Calls',
-    problem: 'Show the difference between running two async calls one after another vs at the same time.',
-    code: `// Sequential — waits for A, then starts B (slower)
-async function sequential() {
+getUser((message) => console.log(message));`,notes:'A callback is a function passed as an argument and invoked later.'},
+{title:'Sequential vs Parallel Async Calls',problem:'Show the difference between two async calls run one-after-another vs together.',code:`async function sequential() {
   const a = await fetchData('a');
   const b = await fetchData('b');
   return [a, b];
 }
-
-// Parallel — both start together (faster)
 async function parallel() {
-  const [a, b] = await Promise.all([
-    fetchData('a'),
-    fetchData('b')
-  ]);
+  const [a, b] = await Promise.all([fetchData('a'), fetchData('b')]);
   return [a, b];
-}
-
-function fetchData(id) {
-  return new Promise((resolve) =>
-    setTimeout(() => resolve(id + ' done'), 1000)
-  );
-}`,
-    notes: 'Use Promise.all() when calls do not depend on each other — cuts total wait time.'
-  },
-  {
-    title: 'Express — GET Route',
-    problem: 'Build a /users route that returns a list of users as JSON.',
-    code: `const express = require('express');
+}`,notes:'Promise.all() runs independent calls together, cutting total wait time.'},
+{title:'Express — GET Route',problem:'Build a /users route that returns a list as JSON.',code:`const express = require('express');
 const app = express();
-
 app.get('/users', (req, res) => {
-  res.json([
-    { id: 1, name: 'Reehan' },
-    { id: 2, name: 'Rahul' }
-  ]);
+  res.json([{ id: 1, name: 'Reehan' }, { id: 2, name: 'Rahul' }]);
 });
-
-app.listen(3000, () => {
-  console.log('Server running');
-});`,
-    notes: 'app.get/post/put/delete map directly to HTTP methods. res.json() sends the response as JSON.'
-  },
-  {
-    title: 'Express — POST Route (Create User)',
-    problem: 'Build a POST /users route that creates a user from the request body.',
-    code: `const express = require('express');
-const app = express();
-app.use(express.json());
-
+app.listen(3000);`,notes:'app.get/post/put/delete map directly to HTTP methods.'},
+{title:'Express — POST Route',problem:'Create a user from the request body.',code:`app.use(express.json());
 app.post('/users', (req, res) => {
   const user = req.body;
-  res.status(201).json({
-    message: 'User created',
-    user
-  });
-});
-
-app.listen(3000);`,
-    notes: 'express.json() is required to read JSON sent in the request body — without it, req.body is undefined.'
-  },
-  {
-    title: 'Middleware — Request Logger',
-    problem: 'Log the method and URL of every incoming request.',
-    code: `const logger = (req, res, next) => {
+  res.status(201).json({ message: 'User created', user });
+});`,notes:'express.json() is required to read a JSON request body.'},
+{title:'Middleware — Request Logger',problem:'Log the method and URL of every incoming request.',code:`const logger = (req, res, next) => {
   console.log(req.method, req.url);
   next();
 };
-
-app.use(logger);`,
-    notes: 'A middleware runs between the request and the response. Forgetting next() hangs the request forever.'
-  },
-  {
-    title: 'Error Handling in a Route',
-    problem: 'Properly catch and respond to an error inside an API route.',
-    code: `app.get('/user', async (req, res) => {
+app.use(logger);`,notes:'Forgetting next() hangs the request forever.'},
+{title:'Error Handling in a Route',problem:'Catch and respond to an error inside a route.',code:`app.get('/user', async (req, res) => {
   try {
     throw new Error('User not found');
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
+    res.status(500).json({ message: error.message });
   }
-});`,
-    notes: 'Never let an error crash the server silently — always send a meaningful status code + message back.'
-  },
-  {
-    title: 'req.params vs req.query vs req.body',
-    problem: 'Get a user ID from the URL /users/25.',
-    code: `app.get('/users/:id', (req, res) => {
-  const id = req.params.id;
-  res.json({ userId: id });
+});`,notes:'Never let an error crash the server silently.'},
+{title:'req.params vs req.query vs req.body',problem:'Get a user ID from the URL /users/25.',code:`app.get('/users/:id', (req, res) => {
+  res.json({ userId: req.params.id });
 });
-
-// req.params → URL path params (/users/:id)
-// req.query  → query string (?search=value)
-// req.body   → data sent in POST/PUT`,
-    notes: 'One of the most commonly asked Node questions — know this cold.'
-  },
-  {
-    title: 'JWT — Generate a Token',
-    problem: 'Generate a signed JWT token after a user logs in.',
-    code: `const jwt = require('jsonwebtoken');
-
-const token = jwt.sign(
-  { userId: 123 },
-  process.env.JWT_SECRET,
-  { expiresIn: '1h' }
-);
-
-console.log(token);`,
-    notes: 'jwt.sign() creates a token, jwt.verify() checks one. Never hardcode the secret — use an environment variable.'
-  },
-  {
-    title: 'Filter Even Numbers',
-    problem: 'From an array of numbers, return only the even ones.',
-    code: `const numbers = [1, 2, 3, 4, 5, 6];
-
-const result = numbers.filter(num => num % 2 === 0);
-
-console.log(result);
-// [2, 4, 6]`,
-    notes: 'filter() keeps only the elements where the callback returns true.'
-  },
-  {
-    title: 'Filter Objects by Condition',
-    problem: 'From a list of users, return only those older than 18.',
-    code: `const users = [
-  { name: 'A', age: 15 },
-  { name: 'B', age: 22 },
-  { name: 'C', age: 30 }
-];
-
-const adults = users.filter(user => user.age > 18);
-
-console.log(adults);
-// [{ name: 'B', age: 22 }, { name: 'C', age: 30 }]`,
-    notes: 'Same filter() pattern, just checking a property on each object instead of the raw value.'
-  },
-  {
-    title: 'Event Loop — Why This Order?',
-    problem: 'Explain why this code logs "1, 4, 3, 2" instead of "1, 2, 3, 4".',
-    code: `console.log('1');
-
+// params → URL path, query → ?key=value, body → POST/PUT data`,notes:'One of the most commonly asked Node questions.'},
+{title:'JWT — Generate a Token',problem:'Generate a signed JWT after login.',code:`const jwt = require('jsonwebtoken');
+const token = jwt.sign({ userId: 123 }, process.env.JWT_SECRET, { expiresIn: '1h' });
+console.log(token);`,notes:'sign() creates a token, verify() checks one. Never hardcode the secret.'},
+{title:'Filter Even Numbers',problem:'Return only the even numbers from an array.',code:`const numbers = [1,2,3,4,5,6];
+console.log(numbers.filter(n => n % 2 === 0)); // [2,4,6]`,notes:'filter() keeps elements where the callback returns true.'},
+{title:'Filter Objects by Condition',problem:'Return users older than 18.',code:`const users = [{name:'A',age:15},{name:'B',age:22},{name:'C',age:30}];
+console.log(users.filter(u => u.age > 18));`,notes:'Same filter() pattern applied to a property.'},
+{title:'Event Loop — Why This Order?',problem:'Explain why sync code, microtasks, and macrotasks log in a specific order.',code:`console.log('1');
 setTimeout(() => console.log('2'), 0);
-
 Promise.resolve().then(() => console.log('3'));
-
 console.log('4');
-
-// Output: 1, 4, 3, 2`,
-    notes: 'Sync code runs first (1, 4). Then microtasks — Promises (3). Then macrotasks — setTimeout (2), even with 0ms delay.'
-  },
-  {
-    title: 'let vs const vs var',
-    problem: 'Explain the difference and show why var can cause bugs.',
-    code: `for (var i = 0; i < 3; i++) {
-  setTimeout(() => console.log(i), 100);
-}
-// logs 3, 3, 3 — var is function-scoped, shared by all callbacks
-
-for (let j = 0; j < 3; j++) {
-  setTimeout(() => console.log(j), 100);
-}
-// logs 0, 1, 2 — let is block-scoped, each loop gets its own j`,
-    notes: 'const = cannot be reassigned. let = block-scoped, reassignable. var = function-scoped, avoid it in modern code.'
-  },
-  {
-    title: '== vs ===',
-    problem: 'Explain the difference between loose and strict equality.',
-    code: `console.log(1 == '1');   // true  — converts types before comparing
-console.log(1 === '1');  // false — no type conversion, must match exactly
-
-console.log(null == undefined);   // true
-console.log(null === undefined);  // false`,
-    notes: 'Always prefer === in real code — it avoids surprising type-coercion bugs.'
-  },
-  {
-    title: 'Closures',
-    problem: 'Write a function that returns a counter which remembers its own count.',
-    code: `function createCounter() {
+// Output: 1, 4, 3, 2`,notes:'Sync first, then microtasks (Promises), then macrotasks (setTimeout).'},
+{title:'let vs const vs var',problem:'Explain scoping differences and why var causes loop bugs.',code:`for (var i=0;i<3;i++) setTimeout(()=>console.log(i),100); // 3,3,3
+for (let j=0;j<3;j++) setTimeout(()=>console.log(j),100); // 0,1,2`,notes:'var is function-scoped and shared; let is block-scoped, one per iteration.'},
+{title:'== vs ===',problem:'Explain loose vs strict equality.',code:`console.log(1 == '1');  // true
+console.log(1 === '1'); // false`,notes:'Always prefer === to avoid type-coercion surprises.'},
+{title:'Closures',problem:'Write a counter function that remembers its own count.',code:`function createCounter() {
   let count = 0;
-  return function () {
-    count++;
-    return count;
-  };
+  return function () { return ++count; };
 }
-
 const counter = createCounter();
-console.log(counter()); // 1
-console.log(counter()); // 2`,
-    notes: 'A closure is a function that "remembers" variables from the scope it was created in, even after that scope has finished running.'
-  },
-  {
-    title: 'Higher-Order Functions',
-    problem: 'Write a function that takes another function as an argument and applies it to every array element.',
-    code: `function applyToAll(arr, fn) {
-  return arr.map(fn);
-}
-
-console.log(applyToAll([1, 2, 3], (n) => n * 2));
-// [2, 4, 6]`,
-    notes: 'A higher-order function either takes a function as an argument or returns one. map/filter/reduce are all built-in examples.'
-  },
-  {
-    title: 'Array reduce() — Sum of Values',
-    problem: 'Sum all numbers in an array using reduce().',
-    code: `const numbers = [1, 2, 3, 4, 5];
-
-const total = numbers.reduce((sum, n) => sum + n, 0);
-
-console.log(total); // 15`,
-    notes: 'reduce(callback, initialValue) — the callback runs once per element, carrying an accumulator forward.'
-  },
-  {
-    title: 'Debounce Function',
-    problem: 'Write a debounce function that delays running a function until the user has stopped triggering it.',
-    code: `function debounce(fn, delay) {
+console.log(counter(), counter()); // 1 2`,notes:'A closure remembers variables from its creation scope, even after that scope ends.'},
+{title:'Higher-Order Functions',problem:'Write a function that applies another function to every array element.',code:`function applyToAll(arr, fn) { return arr.map(fn); }
+console.log(applyToAll([1,2,3], n => n*2)); // [2,4,6]`,notes:'A function that takes/returns another function. map/filter/reduce are built-in examples.'},
+{title:'Array reduce() — Sum of Values',problem:'Sum all numbers in an array.',code:`const numbers = [1,2,3,4,5];
+console.log(numbers.reduce((sum,n) => sum+n, 0)); // 15`,notes:'reduce(callback, initialValue) carries an accumulator across each element.'},
+{title:'Debounce Function',problem:'Delay running a function until the user stops triggering it.',code:`function debounce(fn, delay) {
   let timer;
-  return function (...args) {
+  return (...args) => {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...args), delay);
   };
-}
-
-const search = debounce((query) => console.log('Searching:', query), 300);
-search('a');
-search('ab');
-search('abc'); // only this one actually runs, after 300ms`,
-    notes: 'Common for search boxes — avoids firing an API call on every single keystroke.'
-  },
-  {
-    title: 'Deep Clone an Object',
-    problem: 'Create a true copy of a nested object so editing the copy does not affect the original.',
-    code: `const original = { name: 'Reehan', address: { city: 'Belagavi' } };
-
-const shallow = { ...original };           // nested objects still shared!
-const deep = JSON.parse(JSON.stringify(original)); // safe for simple data
-// or, in modern environments:
-const deep2 = structuredClone(original);`,
-    notes: 'Spread (...) only copies one level deep. JSON trick or structuredClone() copies everything, but JSON loses functions/dates.'
-  },
-  {
-    title: 'CommonJS — module.exports / require',
-    problem: 'Export a function from one file and use it in another.',
-    code: `// math.js
-function add(a, b) {
-  return a + b;
-}
-module.exports = { add };
-
+}`,notes:'Common for search boxes — avoids an API call on every keystroke.'},
+{title:'Deep Clone an Object',problem:'Copy a nested object without sharing references.',code:`const original = { name:'Reehan', address:{city:'Belagavi'} };
+const deep = JSON.parse(JSON.stringify(original));
+const deep2 = structuredClone(original);`,notes:'Spread only copies one level deep; JSON trick or structuredClone() go all the way.'},
+{title:'CommonJS — module.exports / require',problem:'Export a function and import it elsewhere.',code:`// math.js
+module.exports = { add: (a,b) => a+b };
 // app.js
 const { add } = require('./math');
-console.log(add(2, 3)); // 5`,
-    notes: 'module.exports defines what a file shares. require() pulls it into another file. This is Node\'s original module system (CommonJS).'
-  },
-  {
-    title: 'Read a File (fs module)',
-    problem: 'Read a text file asynchronously without blocking the server.',
-    code: `const fs = require('fs');
-
+console.log(add(2,3)); // 5`,notes:"Node's original module system."},
+{title:'Read a File (fs module)',problem:'Read a text file asynchronously.',code:`const fs = require('fs');
 fs.readFile('data.txt', 'utf8', (err, data) => {
-  if (err) {
-    console.log('Error:', err);
-    return;
-  }
+  if (err) return console.log('Error:', err);
   console.log(data);
-});`,
-    notes: 'The callback runs once the file is read — the rest of the server keeps running in the meantime (non-blocking I/O).'
-  },
-  {
-    title: 'Environment Variables (dotenv)',
-    problem: 'Keep secrets like API keys out of your code using environment variables.',
-    code: `// .env file
-// PORT=3000
-// DB_URL=mongodb://localhost/mydb
+});`,notes:'Non-blocking — the rest of the server keeps running while the file is read.'},
+{title:'Environment Variables (dotenv)',problem:'Keep secrets out of source code.',code:`require('dotenv').config();
+const port = process.env.PORT;`,notes:'Never commit a .env file — add it to .gitignore.'},
+{title:'Enable CORS in Express',problem:'Allow a frontend on a different origin to call the API.',code:`const cors = require('cors');
+app.use(cors());`,notes:'Without CORS, browsers block cross-origin requests by default.'},
+{title:'PUT vs PATCH',problem:'Explain the difference between the two HTTP methods.',code:`app.put('/users/:id', (req,res) => { /* replaces whole resource */ });
+app.patch('/users/:id', (req,res) => { /* updates part of it */ });`,notes:'PUT = full replace. PATCH = partial update.'},
+{title:'Flatten a Nested Array',problem:'Turn [1,[2,3],[4,[5,6]]] into a flat array.',code:`const nested = [1,[2,3],[4,[5,6]]];
+console.log(nested.flat(Infinity)); // [1,2,3,4,5,6]`,notes:'flat(Infinity) flattens no matter how deeply nested.'},
+{title:'Sort an Array of Objects',problem:'Sort users by age, youngest first.',code:`const users=[{name:'A',age:30},{name:'B',age:15}];
+users.sort((a,b) => a.age - b.age);`,notes:'Negative return → a first; positive → b first.'},
+{title:'Spread vs Rest Operator',problem:'Explain the difference between ... used to spread and ... used to collect.',code:`// Spread — expands an array
+const combined = [...[1,2], ...[3,4]]; // [1,2,3,4]
+// Rest — collects arguments into an array
+function sum(...nums) { return nums.reduce((a,b)=>a+b,0); }
+console.log(sum(1,2,3)); // 6`,notes:'Same syntax, opposite direction — spread expands, rest collects.'},
+{title:'Array.find() — First Match',problem:'Find the first user with a given id.',code:`const users=[{id:1,name:'A'},{id:2,name:'B'}];
+const user = users.find(u => u.id === 2);
+console.log(user); // { id: 2, name: 'B' }`,notes:'find() returns the first matching element (or undefined), unlike filter() which returns all matches.'},
+{title:'Promise.allSettled vs Promise.all',problem:'Handle multiple promises where some might fail.',code:`Promise.all([p1, p2]).catch(e => console.log('one failed, all rejected'));
 
-require('dotenv').config();
+Promise.allSettled([p1, p2]).then(results => {
+  results.forEach(r => console.log(r.status)); // 'fulfilled' or 'rejected'
+});`,notes:'Promise.all rejects fully if one fails; allSettled always resolves and reports each outcome.'},
+{title:'Node.js Streams — Read a Large File',problem:'Read a large file without loading it entirely into memory.',code:`const fs = require('fs');
+const stream = fs.createReadStream('bigfile.txt', 'utf8');
+stream.on('data', (chunk) => console.log('chunk:', chunk.length));
+stream.on('end', () => console.log('done'));`,notes:'Streams process data in chunks — essential for large files or video, avoiding memory overload.'},
+{title:'Global vs Local Scope',problem:'Explain the difference and a common bug it causes.',code:`let count = 0; // global
 
-const port = process.env.PORT;
-console.log('Server will run on', port);`,
-    notes: 'Never commit a .env file to GitHub — add it to .gitignore. process.env is how Node reads them.'
-  },
-  {
-    title: 'Enable CORS in Express',
-    problem: 'Allow a frontend on a different domain/port to call your API.',
-    code: `const express = require('express');
-const cors = require('cors');
-const app = express();
-
-app.use(cors());
-
-app.get('/data', (req, res) => {
-  res.json({ message: 'CORS enabled' });
-});`,
-    notes: 'Without CORS, browsers block requests from a different origin (e.g. localhost:3000 → localhost:5000) by default.'
-  },
-  {
-    title: 'PUT vs PATCH',
-    problem: 'Explain the difference between the two HTTP methods.',
-    code: `// PUT — replaces the ENTIRE resource
-app.put('/users/:id', (req, res) => {
-  // expects the full user object in req.body
-});
-
-// PATCH — updates only PART of the resource
-app.patch('/users/:id', (req, res) => {
-  // expects only the fields that changed
-});`,
-    notes: 'PUT = full replace. PATCH = partial update. A commonly confused REST question.'
-  },
-  {
-    title: 'Flatten a Nested Array',
-    problem: 'Turn [1, [2, 3], [4, [5, 6]]] into a single flat array.',
-    code: `const nested = [1, [2, 3], [4, [5, 6]]];
-
-const flat = nested.flat(Infinity);
-
-console.log(flat);
-// [1, 2, 3, 4, 5, 6]`,
-    notes: 'flat(Infinity) flattens no matter how deeply nested the array is. flat() alone only goes one level deep.'
-  },
-  {
-    title: 'Sort an Array of Objects',
-    problem: 'Sort a list of users by age, youngest first.',
-    code: `const users = [
-  { name: 'A', age: 30 },
-  { name: 'B', age: 15 },
-  { name: 'C', age: 22 }
-];
-
-users.sort((a, b) => a.age - b.age);
-
-console.log(users);
-// B (15), C (22), A (30)`,
-    notes: 'sort()\'s compare function: negative → a comes first, positive → b comes first. a.age - b.age gives ascending order.'
-  }
+function increment() {
+  let count = 0; // local — shadows the global one
+  count++;
+  console.log(count); // 1, not affecting the outer count
+}
+increment();
+console.log(count); // still 0`,notes:'A local variable with the same name shadows the outer one inside its scope.'},
 ];
 
 const reactQuestions = [
-  {
-    title: 'Basic Component + Props',
-    problem: 'Create a component that greets a user by name, passed in from the parent.',
-    code: `function App() {
-  return <User name="Reehan" />;
-}
-
-function User({ name }) {
-  return <h1>Hello {name}</h1>;
-}`,
-    notes: 'Props flow one direction: parent → child. Destructure them straight in the function signature.'
-  },
-  {
-    title: 'useState — Counter',
-    problem: 'Build a counter with increment and decrement buttons.',
-    code: `import { useState } from 'react';
-
+{title:'Basic Component + Props',problem:'Create a component that greets a user by name.',code:`function App() { return <User name="Reehan" />; }
+function User({ name }) { return <h1>Hello {name}</h1>; }`,notes:'Props flow one direction: parent → child.'},
+{title:'useState — Counter',problem:'Build a counter with increment/decrement buttons.',code:`import { useState } from 'react';
 function Counter() {
   const [count, setCount] = useState(0);
-
   return (
     <>
-      <p>Count: {count}</p>
+      <p>{count}</p>
       <button onClick={() => setCount(count + 1)}>+</button>
       <button onClick={() => setCount(count - 1)}>-</button>
     </>
   );
-}`,
-    notes: 'count is the current value, setCount is the only correct way to update it and trigger a re-render.'
-  },
-  {
-    title: 'Controlled Form Input',
-    problem: 'Keep a text input in sync with component state as the user types.',
-    code: `import { useState } from 'react';
-
-function NameForm() {
-  const [name, setName] = useState('');
-
-  return (
-    <input
-      value={name}
-      onChange={(e) => setName(e.target.value)}
-    />
-  );
-}`,
-    notes: 'A "controlled" input means React state — not the DOM — is the single source of truth for the value.'
-  },
-  {
-    title: 'Form Submit Handling',
-    problem: 'Take a username from an input and log it on submit.',
-    code: `import { useState } from 'react';
-
-function Form() {
-  const [name, setName] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(name);
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input value={name} onChange={(e) => setName(e.target.value)} />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}`,
-    notes: 'e.preventDefault() stops the default full-page reload a native form submit would otherwise trigger.'
-  },
-  {
-    title: 'List Rendering with Key',
-    problem: 'Render a list of products.',
-    code: `const products = [
-  { id: 1, name: 'Laptop' },
-  { id: 2, name: 'Phone' }
-];
-
-function Products() {
-  return (
-    <div>
-      {products.map(product => (
-        <p key={product.id}>{product.name}</p>
-      ))}
-    </div>
-  );
-}`,
-    notes: 'key must be unique and stable (use an id, never the array index if the list can reorder).'
-  },
-  {
-    title: 'Search / Filter a List',
-    problem: 'Let the user type in a search box and filter a list live.',
-    code: `import { useState } from 'react';
-
-function SearchFilter({ items }) {
-  const [query, setQuery] = useState('');
-
-  const filtered = items.filter(item =>
-    item.toLowerCase().includes(query.toLowerCase())
-  );
-
-  return (
-    <>
-      <input value={query} onChange={(e) => setQuery(e.target.value)} />
-      <ul>
-        {filtered.map((item, i) => <li key={i}>{item}</li>)}
-      </ul>
-    </>
-  );
-}`,
-    notes: 'No submit button needed — every keystroke updates query, which re-runs filter() on render.'
-  },
-  {
-    title: 'useEffect — Fetch on Mount',
-    problem: 'Call an API once, right when the component first loads.',
-    code: `import { useEffect } from 'react';
-
-function Users() {
-  useEffect(() => {
-    fetch('/api/users')
-      .then(res => res.json())
-      .then(data => console.log(data));
-  }, []);
-
-  return <h1>Users</h1>;
-}`,
-    notes: 'An empty dependency array [] means the effect runs once, right after the first render.'
-  },
-  {
-    title: 'API Fetch + Display List',
-    problem: 'Fetch a list of users and render them, with a loading state.',
-    code: `import { useEffect, useState } from 'react';
-
-function Users() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/users')
-      .then(res => res.json())
-      .then(data => {
-        setUsers(data);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-
-  return (
-    <div>
-      {users.map(user => <p key={user.id}>{user.name}</p>)}
-    </div>
-  );
-}`,
-    notes: 'This combines useState + useEffect + map() — the single most common React interview pattern.'
-  },
-  {
-    title: 'Event Handling',
-    problem: 'Show a message when a button is clicked.',
-    code: `function App() {
-  const handleClick = () => {
-    alert('Button clicked');
-  };
-
-  return <button onClick={handleClick}>Click</button>;
-}
-
-// Correct:   onClick={handleClick}
-// Wrong:     onClick={handleClick()}  <- runs immediately on render`,
-    notes: 'Pass the function reference, not the result of calling it — a very common beginner bug.'
-  },
-  {
-    title: 'Conditional Rendering',
-    problem: 'Show a Dashboard if logged in, otherwise show a Login prompt.',
-    code: `function App({ isLoggedIn }) {
-  return (
-    <div>
-      {isLoggedIn ? <h1>Dashboard</h1> : <h1>Please Login</h1>}
-    </div>
-  );
-}`,
-    notes: 'The ternary (condition ? a : b) is the standard way to branch inside JSX.'
-  },
-  {
-    title: 'useMemo — Performance',
-    problem: 'Avoid re-running an expensive calculation on every render.',
-    code: `import { useMemo } from 'react';
-
-const result = useMemo(() => {
-  return expensiveCalculation(value);
-}, [value]);`,
-    notes: 'useMemo caches the result and only recalculates when a value in the dependency array actually changes.'
-  },
-  {
-    title: 'useRef — Focus an Input',
-    problem: 'Automatically focus a text input when a button is clicked.',
-    code: `import { useRef } from 'react';
-
-function SearchBox() {
-  const inputRef = useRef(null);
-
-  const focusInput = () => {
-    inputRef.current.focus();
-  };
-
-  return (
-    <>
-      <input ref={inputRef} type="text" />
-      <button onClick={focusInput}>Focus</button>
-    </>
-  );
-}`,
-    notes: 'useRef gives direct access to a DOM element without causing a re-render — unlike state, updating a ref does not trigger a render.'
-  },
-  {
-    title: 'useContext — Share Data Without Prop Drilling',
-    problem: 'Share a theme value with deeply nested components without passing props at every level.',
-    code: `import { createContext, useContext } from 'react';
-
-const ThemeContext = createContext('light');
-
-function App() {
-  return (
-    <ThemeContext.Provider value="dark">
-      <Toolbar />
-    </ThemeContext.Provider>
-  );
-}
+}`,notes:'setCount is the only correct way to update state and trigger a re-render.'},
+{title:'Controlled Form Input',problem:'Keep a text input in sync with state.',code:`const [name, setName] = useState('');
+<input value={name} onChange={(e) => setName(e.target.value)} />`,notes:'React state — not the DOM — is the single source of truth.'},
+{title:'Form Submit Handling',problem:'Take a username from an input and log it on submit.',code:`const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log(name);
+};
+<form onSubmit={handleSubmit}>
+  <input value={name} onChange={(e) => setName(e.target.value)} />
+  <button type="submit">Submit</button>
+</form>`,notes:'e.preventDefault() stops the default page reload.'},
+{title:'List Rendering with Key',problem:'Render a list of products.',code:`const products = [{id:1,name:'Laptop'},{id:2,name:'Phone'}];
+products.map(p => <p key={p.id}>{p.name}</p>);`,notes:'key must be unique and stable — use an id, not the array index if order can change.'},
+{title:'Search / Filter a List',problem:'Filter a list live as the user types.',code:`const [query, setQuery] = useState('');
+const filtered = items.filter(i => i.toLowerCase().includes(query.toLowerCase()));`,notes:'Every keystroke updates query, which re-runs filter() on render.'},
+{title:'useEffect — Fetch on Mount',problem:'Call an API once when the component first loads.',code:`useEffect(() => {
+  fetch('/api/users').then(res => res.json()).then(data => console.log(data));
+}, []);`,notes:'An empty dependency array [] runs the effect once, after the first render.'},
+{title:'API Fetch + Display List',problem:'Fetch users and render them with a loading state.',code:`const [users, setUsers] = useState([]);
+const [loading, setLoading] = useState(true);
+useEffect(() => {
+  fetch('/api/users').then(r=>r.json()).then(d=>{ setUsers(d); setLoading(false); });
+}, []);
+if (loading) return <p>Loading...</p>;`,notes:'The single most common React interview pattern: useState + useEffect + map().'},
+{title:'Event Handling',problem:'Show a message when a button is clicked.',code:`const handleClick = () => alert('Clicked');
+<button onClick={handleClick}>Click</button>
+// Wrong: onClick={handleClick()} — runs immediately on render`,notes:'Pass the function reference, not the result of calling it.'},
+{title:'Conditional Rendering',problem:'Show Dashboard if logged in, else show Login.',code:`{isLoggedIn ? <h1>Dashboard</h1> : <h1>Please Login</h1>}`,notes:'Ternary is the standard way to branch inside JSX.'},
+{title:'useMemo — Performance',problem:'Avoid re-running an expensive calculation every render.',code:`const result = useMemo(() => expensiveCalculation(value), [value]);`,notes:'Only recalculates when a dependency actually changes.'},
+{title:'useRef — Focus an Input',problem:'Focus a text input on button click.',code:`const inputRef = useRef(null);
+<input ref={inputRef} />
+<button onClick={() => inputRef.current.focus()}>Focus</button>`,notes:'useRef gives direct DOM access without causing a re-render.'},
+{title:'useContext — Avoid Prop Drilling',problem:'Share a theme value with deeply nested components.',code:`const ThemeContext = createContext('light');
+<ThemeContext.Provider value="dark"><Toolbar /></ThemeContext.Provider>
 
 function Toolbar() {
   const theme = useContext(ThemeContext);
-  return <p>Current theme: {theme}</p>;
-}`,
-    notes: 'Context avoids "prop drilling" — passing a prop through many layers that do not actually need it themselves.'
-  },
-  {
-    title: 'Custom Hook — useFetch',
-    problem: 'Extract repeated fetch + loading logic into a reusable custom hook.',
-    code: `import { useState, useEffect } from 'react';
-
-function useFetch(url) {
+  return <p>{theme}</p>;
+}`,notes:'Avoids passing a prop through layers that do not need it themselves.'},
+{title:'Custom Hook — useFetch',problem:'Extract repeated fetch logic into a reusable hook.',code:`function useFetch(url) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    fetch(url)
-      .then(res => res.json())
-      .then(json => {
-        setData(json);
-        setLoading(false);
-      });
+    fetch(url).then(r=>r.json()).then(d=>{ setData(d); setLoading(false); });
   }, [url]);
-
   return { data, loading };
-}
-
-// usage
-function Users() {
-  const { data, loading } = useFetch('/api/users');
-  if (loading) return <p>Loading...</p>;
-  return <p>{data.length} users found</p>;
-}`,
-    notes: 'A custom hook is just a function starting with "use" that reuses stateful logic across components.'
-  },
-  {
-    title: 'useReducer — Complex State',
-    problem: 'Manage state with multiple related actions using useReducer instead of several useState calls.',
-    code: `import { useReducer } from 'react';
-
-function reducer(state, action) {
+}`,notes:'Any function starting with "use" that reuses stateful logic is a custom hook.'},
+{title:'useReducer — Complex State',problem:'Manage state with multiple related actions.',code:`function reducer(state, action) {
   switch (action.type) {
     case 'increment': return { count: state.count + 1 };
-    case 'decrement': return { count: state.count - 1 };
     default: return state;
   }
 }
-
-function Counter() {
-  const [state, dispatch] = useReducer(reducer, { count: 0 });
-
-  return (
-    <>
-      <p>{state.count}</p>
-      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
-      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
-    </>
-  );
-}`,
-    notes: 'Prefer useReducer over useState when state logic gets complex, or the next state depends on the previous one in several ways.'
-  },
-  {
-    title: 'Lifting State Up',
-    problem: 'Two sibling components need to share the same value — how do they stay in sync?',
-    code: `function Parent() {
+const [state, dispatch] = useReducer(reducer, { count: 0 });`,notes:'Prefer useReducer when state logic gets complex or depends on the previous state.'},
+{title:'Lifting State Up',problem:'Keep two sibling components in sync.',code:`function Parent() {
   const [value, setValue] = useState('');
-
   return (
     <>
       <InputBox value={value} onChange={setValue} />
       <Preview value={value} />
     </>
   );
-}
-
-function InputBox({ value, onChange }) {
-  return <input value={value} onChange={(e) => onChange(e.target.value)} />;
-}
-
-function Preview({ value }) {
-  return <p>You typed: {value}</p>;
-}`,
-    notes: 'Move the shared state up to the closest common parent, then pass it down as props — this is "lifting state up."'
-  },
-  {
-    title: 'React.memo — Skip Unnecessary Re-renders',
-    problem: 'Prevent a child component from re-rendering when its props have not changed.',
-    code: `const ProductCard = React.memo(function ProductCard({ name, price }) {
-  console.log('Rendering:', name);
-  return <div>{name} - ₹{price}</div>;
-});`,
-    notes: 'React.memo does a shallow comparison of props — if nothing changed, it skips re-rendering that component.'
-  },
-  {
-    title: 'Debounced Search Input',
-    problem: 'Wait until the user stops typing before firing a search API call.',
-    code: `import { useState, useEffect } from 'react';
-
-function Search() {
-  const [query, setQuery] = useState('');
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (query) console.log('Searching for:', query);
-    }, 500);
-
-    return () => clearTimeout(timer); // cleanup on every keystroke
-  }, [query]);
-
-  return <input value={query} onChange={(e) => setQuery(e.target.value)} />;
-}`,
-    notes: 'The cleanup function (return () => ...) cancels the previous timer every time query changes, so only the last keystroke fires the search.'
-  },
-  {
-    title: 'Error Boundary',
-    problem: 'Catch a rendering error in a component tree so the whole app does not crash.',
-    code: `class ErrorBoundary extends React.Component {
+}`,notes:'Move shared state to the closest common parent and pass it down as props.'},
+{title:'React.memo — Skip Re-renders',problem:'Prevent a child from re-rendering when props are unchanged.',code:`const Card = React.memo(function Card({ name }) {
+  return <div>{name}</div>;
+});`,notes:'React.memo shallow-compares props and skips re-rendering if nothing changed.'},
+{title:'Debounced Search Input',problem:'Wait until typing stops before calling search.',code:`useEffect(() => {
+  const timer = setTimeout(() => search(query), 500);
+  return () => clearTimeout(timer);
+}, [query]);`,notes:'The cleanup function cancels the previous timer on every keystroke.'},
+{title:'Error Boundary',problem:'Catch a render error so the app does not fully crash.',code:`class ErrorBoundary extends React.Component {
   state = { hasError: false };
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-
+  static getDerivedStateFromError() { return { hasError: true }; }
   render() {
-    if (this.state.hasError) {
-      return <h2>Something went wrong.</h2>;
-    }
+    if (this.state.hasError) return <h2>Something went wrong.</h2>;
     return this.props.children;
   }
+}`,notes:'Must be a class component — no hook equivalent exists yet.'},
+{title:'Conditional className',problem:'Apply an "active" class only when a condition is true.',code:`<button className={\`tab \${isActive ? 'tab-active' : ''}\`}>{label}</button>`,notes:'Template literals build conditional class strings without a library.'},
+{title:'React.lazy + Suspense',problem:'Load a heavy component only when needed.',code:`const Settings = lazy(() => import('./Settings'));
+<Suspense fallback={<p>Loading...</p>}>
+  <Settings />
+</Suspense>`,notes:'lazy() code-splits the component into its own bundle, loaded on demand.'},
+{title:'PropTypes / Default Props',problem:'Validate props and give one a default value.',code:`User.propTypes = { name: PropTypes.string.isRequired, age: PropTypes.number };
+User.defaultProps = { age: 18 };`,notes:'PropTypes warns in dev tools if a wrong type is passed — it does not stop the app.'},
+{title:'Controlled vs Uncontrolled Components',problem:'Explain the two ways to handle form inputs.',code:`// Controlled — React state drives the value
+<input value={name} onChange={e => setName(e.target.value)} />
+
+// Uncontrolled — the DOM holds the value, read via a ref
+<input ref={inputRef} defaultValue="Reehan" />
+// later: inputRef.current.value`,notes:'Controlled is the React-recommended default; uncontrolled is closer to plain HTML forms.'},
+{title:'React Router — Basic Setup',problem:'Set up two pages with client-side navigation.',code:`import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+
+<BrowserRouter>
+  <Link to="/about">About</Link>
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+  </Routes>
+</BrowserRouter>`,notes:'Link changes the URL without a full page reload; Routes decides which component to show.'},
+{title:'Higher-Order Component (HOC)',problem:'Add loading behavior to any component without repeating code.',code:`function withLoading(Component) {
+  return function Wrapped({ isLoading, ...props }) {
+    if (isLoading) return <p>Loading...</p>;
+    return <Component {...props} />;
+  };
+}
+const UsersWithLoading = withLoading(Users);`,notes:'An HOC is a function that takes a component and returns an enhanced one.'},
+{title:'useLayoutEffect vs useEffect',problem:'Explain when to use each.',code:`useEffect(() => {
+  // runs AFTER the browser paints — fine for most side effects
+}, []);
+
+useLayoutEffect(() => {
+  // runs BEFORE the browser paints — use for DOM measurements
+}, []);`,notes:'useLayoutEffect blocks painting, so use it only when you must read/adjust layout before the user sees it.'},
+{title:'Class Component Lifecycle',problem:'Run code once when a class component mounts.',code:`class Users extends React.Component {
+  componentDidMount() {
+    fetch('/api/users').then(res => res.json()).then(console.log);
+  }
+  render() { return <h1>Users</h1>; }
+}`,notes:'componentDidMount is the class-component equivalent of useEffect(fn, []).'},
+{title:'React.StrictMode',problem:'Explain what wrapping the app in StrictMode does.',code:`<React.StrictMode>
+  <App />
+</React.StrictMode>`,notes:'It intentionally double-invokes some functions in development to help surface side-effect bugs — no effect in production.'},
+{title:'React Portals',problem:'Render a modal outside the main component tree, e.g. directly under <body>.',code:`import { createPortal } from 'react-dom';
+
+function Modal({ children }) {
+  return createPortal(
+    <div className="modal">{children}</div>,
+    document.getElementById('modal-root')
+  );
+}`,notes:'Portals let a component render into a different DOM node — useful for modals and tooltips that must escape a parent\'s overflow/z-index.'},
+{title:'Fragment Shorthand',problem:'Group elements without adding an extra DOM node.',code:`function List() {
+  return (
+    <>
+      <li>Item 1</li>
+      <li>Item 2</li>
+    </>
+  );
+}`,notes:'<>...</> is shorthand for <React.Fragment>...</React.Fragment>.'},
+{title:'Why Index as Key Is Risky',problem:'Explain the bug caused by using the array index as a React key.',code:`// Risky if the list can reorder or items can be removed:
+items.map((item, index) => <li key={index}>{item.name}</li>)
+
+// Safer — use a stable, unique id:
+items.map((item) => <li key={item.id}>{item.name}</li>)`,notes:'With index keys, React can mismatch state to the wrong item after a reorder or deletion.'},
+{title:'children Prop',problem:'Build a reusable Card component that wraps whatever content is passed to it.',code:`function Card({ children }) {
+  return <div className="card">{children}</div>;
+}
+
+<Card><p>Any content goes here</p></Card>`,notes:'children is a special prop that holds whatever is nested between a component\'s opening and closing tags.'},
+{title:'Passing Functions as Props',problem:'Let a child component notify its parent when something happens.',code:`function Parent() {
+  const handleSave = (value) => console.log('Saved:', value);
+  return <Child onSave={handleSave} />;
+}
+
+function Child({ onSave }) {
+  return <button onClick={() => onSave('data')}>Save</button>;
+}`,notes:'Data flows down as props; events flow back up by calling a function passed down as a prop.'},
+{title:'useCallback — Memoize a Function',problem:'Avoid recreating a function on every render, which can break React.memo on children.',code:`const handleClick = useCallback(() => {
+  console.log('clicked', id);
+}, [id]);`,notes:'useCallback returns the same function reference between renders unless a dependency changes — pairs well with React.memo.'},
+];
+
+const jsQuestions = [
+{title:'Hoisting',problem:'Explain why this works even though the function is called before its declaration.',code:`console.log(square(5)); // 25
+function square(n) { return n * n; }`,notes:'Function declarations are hoisted to the top of their scope; function expressions are not.'},
+{title:'Data Types in JS',problem:'List the primitive types in JavaScript.',code:`typeof 'a'         // "string"
+typeof 5            // "number"
+typeof true          // "boolean"
+typeof undefined     // "undefined"
+typeof null          // "object" (a known JS quirk)
+typeof Symbol()       // "symbol"
+typeof 10n            // "bigint"`,notes:'7 primitives: string, number, boolean, undefined, null, symbol, bigint. Everything else is an object.'},
+{title:'typeof Operator',problem:'Check the type of a variable at runtime.',code:`console.log(typeof 42);        // "number"
+console.log(typeof 'hi');      // "string"
+console.log(typeof {});        // "object"
+console.log(typeof [] );       // "object" (arrays are objects)`,notes:'Use Array.isArray() to distinguish arrays from plain objects.'},
+{title:'Template Literals',problem:'Build a string with embedded variables.',code:`const name = 'Reehan';
+const age = 24;
+console.log(\`\${name} is \${age} years old\`);`,notes:'Backticks allow \\${} interpolation and multi-line strings without concatenation.'},
+{title:'Destructuring',problem:'Extract values from an array and an object in one line.',code:`const [a, b] = [1, 2];
+const { name, age } = { name: 'Reehan', age: 24 };
+console.log(a, b, name, age);`,notes:'Destructuring avoids repetitive obj.property or arr[0] access.'},
+{title:'Spread — Merge Arrays/Objects',problem:'Combine two objects into one, with the second overriding shared keys.',code:`const defaults = { theme: 'light', size: 'md' };
+const overrides = { theme: 'dark' };
+const merged = { ...defaults, ...overrides };
+// { theme: 'dark', size: 'md' }`,notes:'Later spreads override earlier ones for the same key.'},
+{title:'Arrow Functions vs Regular — "this"',problem:'Explain why an arrow function inside a method can break "this".',code:`const obj = {
+  name: 'Reehan',
+  regular: function () { console.log(this.name); },   // works
+  arrow: () => { console.log(this.name); }             // undefined
+};`,notes:'Arrow functions do not have their own "this" — they inherit it from the enclosing scope.'},
+{title:'call, apply, bind',problem:'Explicitly set "this" for a function.',code:`function greet() { console.log('Hi ' + this.name); }
+const user = { name: 'Reehan' };
+
+greet.call(user);          // calls immediately, args listed one by one
+greet.apply(user, []);     // calls immediately, args as an array
+const bound = greet.bind(user); // returns a new function for later`,notes:'call/apply invoke right away; bind returns a reusable bound function.'},
+{title:'Array.isArray()',problem:'Reliably check if a value is an array.',code:`console.log(Array.isArray([1,2,3])); // true
+console.log(Array.isArray({}));       // false
+console.log(typeof [1,2,3]);          // "object" — not reliable for this check`,notes:'typeof cannot distinguish arrays from objects; Array.isArray() can.'},
+{title:'JSON.stringify / JSON.parse',problem:'Convert between a JS object and a JSON string.',code:`const obj = { name: 'Reehan' };
+const str = JSON.stringify(obj); // '{"name":"Reehan"}'
+const back = JSON.parse(str);    // { name: 'Reehan' }`,notes:'Used for localStorage, API bodies, and deep-cloning simple data.'},
+{title:'setTimeout vs setInterval',problem:'Explain the difference between the two timer functions.',code:`setTimeout(() => console.log('once'), 1000);
+const id = setInterval(() => console.log('repeats'), 1000);
+clearInterval(id); // stops it`,notes:'setTimeout runs once; setInterval keeps running until cleared with clearInterval.'},
+{title:'Event Bubbling vs Capturing',problem:'Explain how a click event travels through nested elements.',code:`parent.addEventListener('click', () => console.log('parent'));
+child.addEventListener('click', () => console.log('child'));
+// clicking child logs: "child" then "parent" (bubbling, the default)`,notes:'Bubbling: event fires on the target first, then bubbles up to ancestors. Capturing is the reverse, opt-in phase.'},
+{title:'Prototypal Inheritance',problem:'Share a method across all instances without duplicating it.',code:`function Person(name) { this.name = name; }
+Person.prototype.greet = function () { return 'Hi, ' + this.name; };
+
+const p = new Person('Reehan');
+console.log(p.greet());`,notes:'Every instance looks up methods on its prototype chain instead of storing its own copy.'},
+{title:'ES6 Class Syntax',problem:'Write the same Person example using class syntax.',code:`class Person {
+  constructor(name) { this.name = name; }
+  greet() { return 'Hi, ' + this.name; }
+}
+const p = new Person('Reehan');`,notes:'class is syntactic sugar over the same prototype-based inheritance underneath.'},
+{title:'IIFE — Immediately Invoked Function Expression',problem:'Run a function once and keep its variables private.',code:`(function () {
+  const secret = 'hidden';
+  console.log(secret);
+})();
+// secret is not accessible outside`,notes:'Wrapping in parentheses and calling immediately creates an isolated scope.'},
+{title:'NaN and isNaN',problem:'Correctly check if a value is "Not a Number".',code:`console.log(NaN === NaN);        // false — NaN is never equal to itself
+console.log(Number.isNaN(NaN));  // true
+console.log(isNaN('abc'));       // true (coerces first — less reliable)`,notes:'Prefer Number.isNaN() over the global isNaN(), which coerces its argument first.'},
+{title:'Array.some() and Array.every()',problem:'Check if any / all elements pass a condition.',code:`const nums = [1,2,3,4];
+console.log(nums.some(n => n > 3));  // true — at least one
+console.log(nums.every(n => n > 0)); // true — all of them`,notes:'some() short-circuits on the first true; every() short-circuits on the first false.'},
+{title:'Object.keys / values / entries',problem:'Loop over an object\'s properties.',code:`const user = { name: 'Reehan', age: 24 };
+console.log(Object.keys(user));    // ['name', 'age']
+console.log(Object.values(user));  // ['Reehan', 24]
+console.log(Object.entries(user)); // [['name','Reehan'], ['age',24]]`,notes:'entries() is handy for turning an object into a Map or iterating with for...of.'},
+{title:'Optional Chaining (?.)',problem:'Safely access a deeply nested property that might not exist.',code:`const user = { address: null };
+console.log(user.address?.city); // undefined, no crash
+console.log(user.address.city);  // TypeError without ?.`,notes:'Stops evaluating and returns undefined the moment it hits null/undefined.'},
+{title:'Nullish Coalescing (??)',problem:'Provide a default only for null/undefined, not for other falsy values like 0.',code:`const count = 0;
+console.log(count || 10); // 10 — wrong, 0 is falsy
+console.log(count ?? 10); // 0  — correct, 0 is not nullish`,notes:'?? only falls back on null or undefined, unlike || which falls back on any falsy value.'},
+{title:'Generator Functions',problem:'Create a function that can pause and resume, yielding values one at a time.',code:`function* idGenerator() {
+  let id = 1;
+  while (true) yield id++;
+}
+const gen = idGenerator();
+console.log(gen.next().value); // 1
+console.log(gen.next().value); // 2`,notes:'function* + yield lets you produce a sequence of values lazily, one at a time.'},
+{title:'Currying',problem:'Turn a multi-argument function into a chain of single-argument functions.',code:`const add = (a) => (b) => (c) => a + b + c;
+console.log(add(1)(2)(3)); // 6`,notes:'Useful for creating specialized, reusable versions of a function by partially applying arguments.'},
+{title:'Memoization',problem:'Cache the result of an expensive function so repeated calls are instant.',code:`function memoize(fn) {
+  const cache = {};
+  return (n) => {
+    if (cache[n] !== undefined) return cache[n];
+    const result = fn(n);
+    cache[n] = result;
+    return result;
+  };
+}`,notes:'Trades memory for speed — only worth it when the same inputs repeat.'},
+{title:'Array.from()',problem:'Convert an array-like or iterable value into a real array.',code:`console.log(Array.from('abc'));        // ['a','b','c']
+console.log(Array.from({length: 3}, (_, i) => i)); // [0,1,2]`,notes:'Also useful for generating a range of numbers with a map function as the second argument.'},
+{title:'Object.freeze()',problem:'Prevent an object from being modified.',code:`const config = Object.freeze({ env: 'production' });
+config.env = 'dev'; // silently fails (throws in strict mode)
+console.log(config.env); // still 'production'`,notes:'A shallow freeze — nested objects inside can still be changed unless frozen too.'},
+{title:'Truthy / Falsy Values',problem:'List which values are treated as false in a condition.',code:`// Falsy: false, 0, '', null, undefined, NaN
+if (0) console.log('never runs');
+if ('hello') console.log('runs — non-empty strings are truthy');`,notes:'Everything else, including "0" (string) and [] (empty array), is truthy.'},
+{title:'for...of vs for...in',problem:'Explain the difference when looping over an array.',code:`const arr = ['a','b','c'];
+for (const value of arr) console.log(value);  // 'a','b','c'
+for (const index in arr) console.log(index);  // '0','1','2'`,notes:'for...of gives values (works on any iterable); for...in gives keys/indexes — avoid it for arrays.'},
+{title:'WeakMap vs Map',problem:'Explain when to prefer WeakMap over Map.',code:`const map = new Map();       // keys can be anything, prevents garbage collection
+const weakMap = new WeakMap(); // keys must be objects, allows garbage collection`,notes:'WeakMap lets its keys be garbage-collected when no other reference exists — useful for metadata tied to DOM nodes.'},
+];
+
+const pythonQuestions = [
+{title:'List vs Tuple',problem:'Explain the key difference between the two.',code:`my_list = [1, 2, 3]      # mutable
+my_tuple = (1, 2, 3)     # immutable
+my_list.append(4)        # works
+# my_tuple.append(4)     # AttributeError`,notes:'Tuples cannot be changed after creation — useful for fixed data.'},
+{title:'List Comprehension',problem:'Create a list of squares from 1 to 5.',code:`squares = [n**2 for n in range(1, 6)]
+print(squares) # [1, 4, 9, 16, 25]`,notes:'A concise way to build a list in one line instead of a for-loop + append.'},
+{title:'Dictionary Basics',problem:'Store and access user data by key.',code:`user = {'name': 'Reehan', 'age': 24}
+print(user['name'])
+user['city'] = 'Belagavi'  # add a new key`,notes:"Python's dict is a key-value store, similar to a JS object."},
+{title:'Function with Default Arguments',problem:'Write a greet function with a default name.',code:`def greet(name='Guest'):
+    return f'Hello, {name}'
+
+print(greet())          # Hello, Guest
+print(greet('Reehan'))  # Hello, Reehan`,notes:'Default values are used only when the argument is not provided.'},
+{title:'*args and **kwargs',problem:'Accept any number of positional and keyword arguments.',code:`def show(*args, **kwargs):
+    print(args)    # tuple of positional args
+    print(kwargs)  # dict of keyword args
+
+show(1, 2, name='Reehan')
+# (1, 2)
+# {'name': 'Reehan'}`,notes:'*args collects extra positional arguments, **kwargs collects extra keyword arguments.'},
+{title:'Lambda Function',problem:'Write a small anonymous function to square a number.',code:`square = lambda x: x ** 2
+print(square(5)) # 25`,notes:'lambda creates a small unnamed function, often used inline with map/filter/sorted.'},
+{title:'map(), filter(), reduce()',problem:'Transform, filter, and reduce a list.',code:`from functools import reduce
+nums = [1, 2, 3, 4]
+doubled = list(map(lambda n: n*2, nums))     # [2,4,6,8]
+evens = list(filter(lambda n: n%2==0, nums)) # [2,4]
+total = reduce(lambda a,b: a+b, nums)        # 10`,notes:'reduce needs an import from functools; map/filter are built-in.'},
+{title:'String Formatting (f-strings)',problem:'Build a formatted string with variables.',code:`name = 'Reehan'
+age = 24
+print(f'{name} is {age} years old')`,notes:'f-strings are the modern, readable way to format strings in Python 3.6+.'},
+{title:'Exception Handling',problem:'Handle a divide-by-zero error gracefully.',code:`try:
+    result = 10 / 0
+except ZeroDivisionError as e:
+    print('Error:', e)
+finally:
+    print('Done')`,notes:'finally always runs, whether or not an exception occurred.'},
+{title:'File Handling',problem:'Read and write a text file safely.',code:`with open('data.txt', 'w') as f:
+    f.write('Hello')
+
+with open('data.txt', 'r') as f:
+    print(f.read())`,notes:'The "with" statement auto-closes the file, even if an error happens inside.'},
+{title:'Class and Object (OOP Basics)',problem:'Define a simple Person class.',code:`class Person:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        return f'Hi, {self.name}'
+
+p = Person('Reehan')
+print(p.greet())`,notes:'__init__ is the constructor, called automatically when an object is created.'},
+{title:'Inheritance in Python',problem:'Create a Student class that inherits from Person.',code:`class Student(Person):
+    def __init__(self, name, course):
+        super().__init__(name)
+        self.course = course
+
+s = Student('Reehan', 'CS')
+print(s.greet(), s.course)`,notes:'super().__init__() calls the parent class constructor.'},
+{title:'self Keyword',problem:'Explain what "self" refers to inside a method.',code:`class Counter:
+    def __init__(self):
+        self.count = 0
+    def increment(self):
+        self.count += 1  # self refers to THIS specific instance`,notes:'self is how a method refers to the specific object it was called on — Python passes it automatically.'},
+{title:'Decorators',problem:'Add logging behavior to a function without modifying it.',code:`def log_call(fn):
+    def wrapper(*args, **kwargs):
+        print(f'Calling {fn.__name__}')
+        return fn(*args, **kwargs)
+    return wrapper
+
+@log_call
+def add(a, b):
+    return a + b
+
+add(2, 3) # prints "Calling add", then returns 5`,notes:'A decorator wraps a function to extend its behavior — @log_call is shorthand for add = log_call(add).'},
+{title:'Generators (yield)',problem:'Create a memory-efficient sequence generator.',code:`def count_up_to(n):
+    i = 1
+    while i <= n:
+        yield i
+        i += 1
+
+for num in count_up_to(3):
+    print(num) # 1, 2, 3`,notes:'yield pauses the function and returns one value at a time instead of building a full list in memory.'},
+{title:'List Slicing',problem:'Extract parts of a list using slice notation.',code:`nums = [0,1,2,3,4,5]
+print(nums[1:4])   # [1, 2, 3]
+print(nums[:3])    # [0, 1, 2]
+print(nums[::-1])  # [5, 4, 3, 2, 1, 0] — reversed`,notes:'list[start:stop:step] — any part can be omitted.'},
+{title:'Set Operations',problem:'Find common and unique elements between two groups.',code:`a = {1, 2, 3}
+b = {2, 3, 4}
+print(a & b) # intersection: {2, 3}
+print(a | b) # union: {1, 2, 3, 4}
+print(a - b) # difference: {1}`,notes:'Sets automatically drop duplicates and support fast membership + set-math operators.'},
+{title:'Sorting — sorted() vs .sort()',problem:'Explain the difference between the two sorting approaches.',code:`nums = [3, 1, 2]
+new_list = sorted(nums)  # returns a NEW sorted list, original unchanged
+nums.sort()              # sorts the list IN PLACE, returns None`,notes:'Use sorted() when you need the original list untouched.'},
+{title:'Reverse a String',problem:'Reverse "hello" without using a library.',code:`s = 'hello'
+print(s[::-1]) # 'olleh'`,notes:'Slice with a step of -1 walks the string backwards.'},
+{title:'Check Palindrome',problem:'Check if a word reads the same forwards and backwards.',code:`def is_palindrome(s):
+    s = s.lower()
+    return s == s[::-1]
+
+print(is_palindrome('madam')) # True`,notes:'Compare the string to its own reverse.'},
+{title:'Find Duplicates in a List',problem:'Return the values that appear more than once.',code:`from collections import Counter
+nums = [1, 2, 2, 3, 3, 3]
+counts = Counter(nums)
+dupes = [n for n, c in counts.items() if c > 1]
+print(dupes) # [2, 3]`,notes:'Counter builds a frequency map in one line — very handy for this pattern.'},
+{title:'Word Frequency Count',problem:'Count how often each word appears in a sentence.',code:`from collections import Counter
+text = 'the cat sat on the mat'
+print(Counter(text.split()))
+# Counter({'the': 2, 'cat': 1, 'sat': 1, 'on': 1, 'mat': 1})`,notes:'Counter(list) counts occurrences directly — no manual loop needed.'},
+{title:'Fibonacci Sequence',problem:'Generate the first n Fibonacci numbers.',code:`def fibonacci(n):
+    a, b = 0, 1
+    result = []
+    for _ in range(n):
+        result.append(a)
+        a, b = b, a + b
+    return result
+
+print(fibonacci(6)) # [0, 1, 1, 2, 3, 5]`,notes:'Tuple assignment a, b = b, a+b swaps and advances both values in one line.'},
+{title:'Factorial (Recursion)',problem:'Calculate n! using recursion.',code:`def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+
+print(factorial(5)) # 120`,notes:'Every recursive function needs a base case, or it will recurse forever.'},
+{title:'Swap Two Variables',problem:'Swap the values of a and b without a temp variable.',code:`a, b = 5, 10
+a, b = b, a
+print(a, b) # 10 5`,notes:'Python evaluates the right side as a tuple first, then unpacks — no temp variable needed.'},
+{title:'Merge Two Dictionaries',problem:'Combine two dicts, with the second overriding shared keys.',code:`d1 = {'a': 1, 'b': 2}
+d2 = {'b': 3, 'c': 4}
+merged = {**d1, **d2}
+print(merged) # {'a': 1, 'b': 3, 'c': 4}`,notes:'Dict unpacking (** ) merges left to right — later keys win.'},
+{title:'enumerate()',problem:'Loop over a list while also tracking the index.',code:`fruits = ['apple', 'banana', 'cherry']
+for i, fruit in enumerate(fruits):
+    print(i, fruit)
+# 0 apple
+# 1 banana
+# 2 cherry`,notes:'Cleaner than manually managing a separate counter variable.'},
+{title:'zip() Function',problem:'Pair up elements from two lists.',code:`names = ['Reehan', 'Rahul']
+ages = [24, 25]
+for name, age in zip(names, ages):
+    print(name, age)`,notes:'zip() stops at the shorter list if the two are different lengths.'},
+{title:'is vs ==',problem:'Explain the difference between identity and equality checks.',code:`a = [1, 2, 3]
+b = [1, 2, 3]
+print(a == b) # True  — same values
+print(a is b) # False — different objects in memory`,notes:'== compares values, is compares object identity (same memory location).'},
+{title:'Mutable vs Immutable Types',problem:'Explain which built-in types can be changed after creation.',code:`# Mutable: list, dict, set
+# Immutable: int, float, str, tuple, bool
+
+s = 'hello'
+# s[0] = 'H'  # TypeError — strings are immutable
+s = 'H' + s[1:] # creates a new string instead`,notes:'Mutable objects can be modified in place; immutable ones require creating a new object to "change".'},
+{title:'Global vs Local Variable',problem:'Modify a global variable from inside a function.',code:`count = 0
+def increment():
+    global count
+    count += 1
+
+increment()
+print(count) # 1`,notes:'Without the global keyword, count += 1 inside the function would create a new local variable instead.'},
+{title:'Ternary (Conditional) Expression',problem:'Write an if/else in a single line.',code:`age = 20
+status = 'adult' if age >= 18 else 'minor'
+print(status) # adult`,notes:"Python's version of JS's condition ? a : b, but with the condition in the middle."},
+{title:'Multiple Return Values',problem:'Return more than one value from a function.',code:`def min_max(nums):
+    return min(nums), max(nums)
+
+low, high = min_max([4, 1, 9, 3])
+print(low, high) # 1 9`,notes:'Python returns a tuple, which is then unpacked into separate variables.'},
+{title:'Context Manager (with statement)',problem:'Explain why "with open(...)" is preferred over manually opening/closing files.',code:`# Preferred:
+with open('data.txt') as f:
+    data = f.read()
+# file is automatically closed here, even if an error occurs
+
+# Manual (risky):
+f = open('data.txt')
+data = f.read()
+f.close() # skipped if an error happens above`,notes:'with guarantees cleanup (closing the file) even if an exception is raised inside the block.'},
+{title:'List vs Generator (Memory)',problem:'Explain why a generator can be more memory-efficient than a list for large data.',code:`# List — builds all million values in memory immediately
+squares_list = [n**2 for n in range(1000000)]
+
+# Generator — computes one value at a time, on demand
+squares_gen = (n**2 for n in range(1000000))`,notes:'Parentheses instead of brackets create a generator expression — values are produced lazily instead of stored all at once.'},
+];
+
+const javaQuestions = [
+{title:'Class and Object',problem:'Define a simple class and create an object from it.',code:`class Person {
+    String name;
+    Person(String name) { this.name = name; }
+    void greet() { System.out.println("Hi, " + name); }
+}
+
+Person p = new Person("Reehan");
+p.greet();`,notes:'A class is a blueprint; an object is an instance created with "new".'},
+{title:'Constructor',problem:'Explain what a constructor is and when it runs.',code:`class Car {
+    String model;
+    Car(String model) {
+        this.model = model; // runs automatically when "new Car(...)" is called
+    }
+}`,notes:'A constructor has the same name as the class and no return type — it initializes the object.'},
+{title:'Method Overloading',problem:'Define two versions of add() with different parameters.',code:`class Calculator {
+    int add(int a, int b) { return a + b; }
+    double add(double a, double b) { return a + b; }
+}`,notes:'Overloading = same method name, different parameter list, resolved at compile time.'},
+{title:'Method Overriding',problem:'Override a parent class method in a child class.',code:`class Animal {
+    void sound() { System.out.println("Some sound"); }
+}
+class Dog extends Animal {
+    @Override
+    void sound() { System.out.println("Bark"); }
+}`,notes:'Overriding = same signature in a subclass, resolved at runtime (polymorphism).'},
+{title:'Inheritance',problem:'Create a Student class that inherits from Person.',code:`class Person {
+    String name;
+    Person(String name) { this.name = name; }
+}
+class Student extends Person {
+    String course;
+    Student(String name, String course) {
+        super(name);
+        this.course = course;
+    }
+}`,notes:'extends creates an "is-a" relationship; super(...) calls the parent constructor.'},
+{title:'Interface vs Abstract Class',problem:'Explain when to use each.',code:`interface Shape {
+    double area(); // no body — implementing classes must define it
+}
+abstract class Vehicle {
+    abstract void move();       // must be implemented
+    void fuel() { /* shared logic all subclasses get for free */ }
+}`,notes:'Interfaces define a pure contract (multiple can be implemented); abstract classes can share partial implementation (only one can be extended).'},
+{title:'Static Keyword',problem:'Explain the difference between a static and instance method.',code:`class MathUtils {
+    static int square(int n) { return n * n; } // belongs to the class
+}
+int result = MathUtils.square(5); // called without creating an object`,notes:'static members belong to the class itself, not to any individual instance.'},
+{title:'Final Keyword',problem:'Explain the three uses of "final".',code:`final int MAX = 100;         // constant — cannot be reassigned
+final class Utils { }        // cannot be extended
+class Base {
+    final void show() { }    // cannot be overridden
+}`,notes:'final locks a variable\'s value, a class from inheritance, or a method from overriding.'},
+{title:'Access Modifiers',problem:'Explain public, private, and protected.',code:`class Account {
+    private double balance;      // only accessible within this class
+    protected String owner;      // accessible in this class + subclasses
+    public String accountNumber; // accessible from anywhere
+}`,notes:'Encapsulation relies on private fields with public getter/setter methods.'},
+{title:'Array Basics',problem:'Declare, initialize, and loop through an array.',code:`int[] nums = {1, 2, 3, 4};
+for (int n : nums) {
+    System.out.println(n);
+}`,notes:'Java arrays have a fixed size once created — use ArrayList for a resizable collection.'},
+{title:'ArrayList vs Array',problem:'Explain the key difference.',code:`int[] arr = new int[3];        // fixed size
+ArrayList<Integer> list = new ArrayList<>();
+list.add(1);
+list.add(2); // grows automatically`,notes:'ArrayList resizes dynamically and has built-in methods like add/remove; arrays do not.'},
+{title:'String vs StringBuilder',problem:'Explain why repeated string concatenation in a loop is inefficient.',code:`// Inefficient — creates a new String object each time
+String result = "";
+for (int i = 0; i < 1000; i++) result += i;
+
+// Efficient — mutates the same buffer
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < 1000; i++) sb.append(i);
+String result2 = sb.toString();`,notes:'Strings are immutable in Java — every += creates a brand new object. StringBuilder avoids that.'},
+{title:'Exception Handling',problem:'Handle a divide-by-zero error safely.',code:`try {
+    int result = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("Error: " + e.getMessage());
+} finally {
+    System.out.println("Done");
+}`,notes:'finally always runs, whether or not an exception was thrown.'},
+{title:'Custom Exception',problem:'Create your own exception type for a specific error case.',code:`class InsufficientFundsException extends Exception {
+    InsufficientFundsException(String message) {
+        super(message);
+    }
 }
 
 // usage
-<ErrorBoundary>
-  <BuggyComponent />
-</ErrorBoundary>`,
-    notes: 'Error boundaries must be class components (no hook equivalent yet). They catch errors thrown anywhere below them in the tree.'
-  },
-  {
-    title: 'Conditional className',
-    problem: 'Apply an "active" CSS class only when a condition is true.',
-    code: `function Tab({ isActive, label }) {
-  return (
-    <button className={\`tab \${isActive ? 'tab-active' : ''}\`}>
-      {label}
-    </button>
-  );
-}`,
-    notes: 'Template literals make it easy to build conditional class strings without a library.'
-  },
-  {
-    title: 'React.lazy + Suspense — Code Splitting',
-    problem: 'Load a heavy component only when it is actually needed, not on initial page load.',
-    code: `import { lazy, Suspense } from 'react';
-
-const Settings = lazy(() => import('./Settings'));
-
-function App() {
-  return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <Settings />
-    </Suspense>
-  );
-}`,
-    notes: 'lazy() splits that component into a separate bundle, downloaded only when it renders. Suspense shows a fallback while it loads.'
-  },
-  {
-    title: 'PropTypes / Default Props',
-    problem: 'Validate the props a component receives and give one a default value.',
-    code: `import PropTypes from 'prop-types';
-
-function User({ name, age }) {
-  return <p>{name} is {age} years old</p>;
+throw new InsufficientFundsException("Balance too low");`,notes:'Extend Exception (checked) or RuntimeException (unchecked) to create a domain-specific error type.'},
+{title:'equals() vs ==',problem:'Explain why == on objects often gives an unexpected result.',code:`String a = new String("hi");
+String b = new String("hi");
+System.out.println(a == b);      // false — different objects in memory
+System.out.println(a.equals(b)); // true — same content`,notes:'== compares references (memory addresses) for objects; equals() compares actual content.'},
+{title:'hashCode() and equals()',problem:'Explain why overriding equals() usually requires overriding hashCode() too.',code:`class Point {
+    int x, y;
+    @Override
+    public boolean equals(Object o) { /* compare x and y */ return true; }
+    @Override
+    public int hashCode() { return Objects.hash(x, y); }
+}`,notes:'HashMap/HashSet rely on hashCode() to bucket objects — inconsistent hashCode() and equals() breaks lookups.'},
+{title:'this Keyword',problem:'Use "this" to distinguish a field from a constructor parameter of the same name.',code:`class Person {
+    String name;
+    Person(String name) {
+        this.name = name; // this.name = field, name = parameter
+    }
+}`,notes:'this refers to the current object instance.'},
+{title:'super Keyword',problem:'Call a parent class constructor and method from a subclass.',code:`class Animal {
+    void sound() { System.out.println("Some sound"); }
 }
+class Dog extends Animal {
+    void sound() {
+        super.sound();          // call parent version too
+        System.out.println("Bark");
+    }
+}`,notes:'super accesses the parent class\'s constructor or overridden methods.'},
+{title:'Polymorphism',problem:'Call the correct overridden method through a parent-type reference.',code:`Animal a = new Dog(); // reference type Animal, actual object Dog
+a.sound(); // prints "Bark" — runtime decides which version to call`,notes:'Runtime polymorphism: the actual object type determines which overridden method runs.'},
+{title:'Encapsulation',problem:'Protect a field with private access and controlled getters/setters.',code:`class Account {
+    private double balance;
+    public double getBalance() { return balance; }
+    public void deposit(double amount) {
+        if (amount > 0) balance += amount;
+    }
+}`,notes:'Encapsulation hides internal state and only exposes controlled ways to read/modify it.'},
+{title:'Constructor Overloading',problem:'Provide multiple ways to construct the same class.',code:`class Box {
+    int size;
+    Box() { this.size = 1; }
+    Box(int size) { this.size = size; }
+}`,notes:'Same class, multiple constructors with different parameter lists.'},
+{title:'HashMap Basics',problem:'Store and look up user ages by name.',code:`HashMap<String, Integer> ages = new HashMap<>();
+ages.put("Reehan", 24);
+System.out.println(ages.get("Reehan")); // 24
+System.out.println(ages.containsKey("Reehan")); // true`,notes:"Java's key-value store — average O(1) lookup, no guaranteed order."},
+{title:'For-each Loop',problem:'Loop through a list without managing an index.',code:`List<String> names = List.of("A", "B", "C");
+for (String name : names) {
+    System.out.println(name);
+}`,notes:'Cleaner syntax than a traditional indexed for-loop when you just need each element.'},
+{title:'Ternary Operator',problem:'Write an if/else check in a single line.',code:`int age = 20;
+String status = (age >= 18) ? "adult" : "minor";`,notes:'condition ? valueIfTrue : valueIfFalse.'},
+{title:'Switch Statement',problem:'Branch on multiple possible values of a variable.',code:`int day = 3;
+switch (day) {
+    case 1: System.out.println("Mon"); break;
+    case 2: System.out.println("Tue"); break;
+    default: System.out.println("Other");
+}`,notes:'Do not forget break — without it, execution "falls through" into the next case.'},
+{title:'Wrapper Classes',problem:'Explain why Java has both int and Integer.',code:`int primitive = 5;
+Integer wrapper = 5; // autoboxed
+ArrayList<Integer> list = new ArrayList<>(); // generics need an object type, not a primitive`,notes:'Generic collections (like ArrayList) can only hold objects, not primitives — wrapper classes bridge that gap.'},
+{title:'Multithreading Basics',problem:'Run a task on a separate thread.',code:`Thread t = new Thread(() -> {
+    System.out.println("Running in a new thread");
+});
+t.start();`,notes:'start() begins a new thread; calling run() directly would just execute it on the current thread.'},
+{title:'Static vs Instance Methods',problem:'Explain when you would use each.',code:`class Utils {
+    static int square(int n) { return n * n; }   // no object state needed
+}
+class Counter {
+    int count = 0;
+    void increment() { count++; }                // needs instance state
+}`,notes:'Static methods do not depend on any particular object\'s data; instance methods do.'},
+{title:'Java Collections — List/Set/Map',problem:'Choose the right collection for different needs.',code:`List<String> list = new ArrayList<>();  // ordered, allows duplicates
+Set<String> set = new HashSet<>();      // no duplicates, no guaranteed order
+Map<String, Integer> map = new HashMap<>(); // key-value pairs`,notes:'List for ordered data with duplicates, Set for uniqueness, Map for key-based lookup.'},
+{title:'String Immutability',problem:'Explain why Strings in Java cannot be changed in place.',code:`String s = "hello";
+s.concat(" world"); // returns a NEW string — does not modify s
+System.out.println(s); // still "hello"
+s = s.concat(" world"); // must reassign to capture the change`,notes:'Every "modification" on a String actually creates a new String object.'},
+{title:'Recursion — Factorial',problem:'Calculate n! using recursion.',code:`static int factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+System.out.println(factorial(5)); // 120`,notes:'Every recursive method needs a base case to stop the recursion.'},
+{title:'Sorting an Array',problem:'Sort an array of integers in ascending order.',code:`int[] nums = {5, 2, 8, 1};
+Arrays.sort(nums);
+System.out.println(Arrays.toString(nums)); // [1, 2, 5, 8]`,notes:'Arrays.sort() sorts in place using an efficient dual-pivot quicksort for primitives.'},
+];
 
-User.propTypes = {
-  name: PropTypes.string.isRequired,
-  age: PropTypes.number
+const sqlQuestions = [
+{title:'SELECT Basics',problem:'Retrieve specific columns from a table.',code:`SELECT name, age FROM users;`,notes:'SELECT * FROM users; gets every column — fine for exploring, avoid in production queries.'},
+{title:'WHERE Clause',problem:'Filter rows based on a condition.',code:`SELECT * FROM users WHERE age > 18;`,notes:'WHERE filters rows before any grouping happens.'},
+{title:'ORDER BY',problem:'Sort results by a column.',code:`SELECT * FROM users ORDER BY age DESC;`,notes:'ASC (default) for ascending, DESC for descending.'},
+{title:'GROUP BY',problem:'Count how many users exist per city.',code:`SELECT city, COUNT(*) AS total
+FROM users
+GROUP BY city;`,notes:'GROUP BY collapses rows sharing the same value into one row per group.'},
+{title:'HAVING vs WHERE',problem:'Filter groups after aggregation, not individual rows.',code:`SELECT city, COUNT(*) AS total
+FROM users
+GROUP BY city
+HAVING COUNT(*) > 5;`,notes:'WHERE filters rows before grouping; HAVING filters groups after aggregation.'},
+{title:'JOIN Types',problem:'Combine data from two related tables.',code:`-- INNER JOIN: only matching rows in both tables
+SELECT o.id, u.name FROM orders o
+INNER JOIN users u ON o.user_id = u.id;
+
+-- LEFT JOIN: all rows from orders, matched users if they exist
+SELECT o.id, u.name FROM orders o
+LEFT JOIN users u ON o.user_id = u.id;`,notes:'INNER JOIN drops unmatched rows; LEFT JOIN keeps all rows from the left table, filling unmatched columns with NULL.'},
+{title:'Primary Key vs Foreign Key',problem:'Explain how tables reference each other.',code:`CREATE TABLE users (
+  id INT PRIMARY KEY,
+  name VARCHAR(50)
+);
+CREATE TABLE orders (
+  id INT PRIMARY KEY,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);`,notes:'A primary key uniquely identifies a row; a foreign key links to another table\'s primary key.'},
+{title:'UNIQUE Constraint',problem:'Prevent duplicate email addresses in a table.',code:`CREATE TABLE users (
+  id INT PRIMARY KEY,
+  email VARCHAR(100) UNIQUE
+);`,notes:'UNIQUE allows NULLs (usually one) but blocks duplicate non-null values.'},
+{title:'INSERT INTO',problem:'Add a new row to a table.',code:`INSERT INTO users (name, age)
+VALUES ('Reehan', 24);`,notes:'Column names are optional if you provide values for every column in order.'},
+{title:'UPDATE Statement',problem:'Change an existing row\'s data.',code:`UPDATE users
+SET age = 25
+WHERE id = 1;`,notes:'Always include a WHERE clause — an UPDATE without one changes every row in the table.'},
+{title:'DELETE vs TRUNCATE',problem:'Explain the difference between removing rows two ways.',code:`DELETE FROM users WHERE id = 1; -- removes specific rows, can be rolled back
+TRUNCATE TABLE users;           -- removes ALL rows instantly, resets identity`,notes:'DELETE is row-by-row and logged; TRUNCATE is faster but removes everything and is harder to undo.'},
+{title:'DISTINCT Keyword',problem:'Get a list of unique cities from a users table.',code:`SELECT DISTINCT city FROM users;`,notes:'DISTINCT removes duplicate rows from the result set.'},
+{title:'COUNT / SUM / AVG',problem:'Calculate aggregate statistics on orders.',code:`SELECT COUNT(*) AS total_orders,
+       SUM(amount) AS revenue,
+       AVG(amount) AS avg_order
+FROM orders;`,notes:'These are aggregate functions — they collapse many rows into a single summary value.'},
+{title:'Subquery',problem:'Find users who have placed at least one order.',code:`SELECT name FROM users
+WHERE id IN (SELECT DISTINCT user_id FROM orders);`,notes:'A query nested inside another query — the inner query runs first.'},
+{title:'Aliases (AS)',problem:'Rename a column or table in the result set.',code:`SELECT u.name AS customer_name, COUNT(o.id) AS order_count
+FROM users AS u
+JOIN orders AS o ON u.id = o.user_id
+GROUP BY u.name;`,notes:'AS makes results more readable, especially with joins and aggregates.'},
+{title:'LIKE Operator',problem:'Find all users whose name starts with "R".',code:`SELECT * FROM users WHERE name LIKE 'R%';`,notes:'% matches any number of characters, _ matches exactly one character.'},
+{title:'BETWEEN Operator',problem:'Find users aged between 18 and 30.',code:`SELECT * FROM users WHERE age BETWEEN 18 AND 30;`,notes:'BETWEEN is inclusive of both boundary values.'},
+{title:'IN Operator',problem:'Find users living in one of several specific cities.',code:`SELECT * FROM users WHERE city IN ('Belagavi', 'Pune', 'Bangalore');`,notes:'Shorthand for chaining multiple OR conditions on the same column.'},
+{title:'NULL Handling (IS NULL)',problem:'Find users with no phone number on file.',code:`SELECT * FROM users WHERE phone IS NULL;`,notes:'Never use = NULL to check for null — it always evaluates to unknown/false. Use IS NULL / IS NOT NULL.'},
+{title:'LIMIT / TOP',problem:'Get only the first 5 results.',code:`-- MySQL / PostgreSQL
+SELECT * FROM users ORDER BY id LIMIT 5;
+
+-- SQL Server
+SELECT TOP 5 * FROM users ORDER BY id;`,notes:'Useful for pagination — combine with OFFSET to skip rows for page 2, 3, etc.'},
+{title:'Indexes',problem:'Explain why a query on a large table can be slow without one.',code:`CREATE INDEX idx_users_email ON users(email);
+-- Now WHERE email = '...' is much faster, like a book's index vs reading every page`,notes:'An index speeds up lookups on that column at the cost of slightly slower writes and extra storage.'},
+{title:'Normalization (Concept)',problem:'Explain why splitting data into related tables is preferred over one big table.',code:`-- Un-normalized: repeats city/state for every order row
+-- Normalized: separate users table, orders table just references user_id`,notes:'Normalization reduces data duplication and keeps updates consistent across the database.'},
+{title:'CREATE TABLE',problem:'Define a new table with constraints.',code:`CREATE TABLE users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  email VARCHAR(100) UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`,notes:'NOT NULL, UNIQUE, DEFAULT, and PRIMARY KEY are all common column-level constraints.'},
+{title:'ALTER TABLE',problem:'Add a new column to an existing table.',code:`ALTER TABLE users ADD COLUMN phone VARCHAR(15);`,notes:'ALTER TABLE can also DROP COLUMN, MODIFY COLUMN, or RENAME COLUMN.'},
+{title:'Self Join',problem:'Find pairs of employees who share the same manager.',code:`SELECT e1.name, e2.name AS colleague
+FROM employees e1
+JOIN employees e2 ON e1.manager_id = e2.manager_id
+WHERE e1.id != e2.id;`,notes:'A self join treats the same table as two logical copies, joined against itself.'},
+{title:'UNION vs UNION ALL',problem:'Combine results from two similar queries.',code:`SELECT city FROM customers
+UNION
+SELECT city FROM suppliers;
+-- UNION removes duplicates; UNION ALL keeps every row (faster)`,notes:'Use UNION ALL when you know there are no duplicates, or you actually want them — it skips the extra de-duplication work.'},
+{title:'Composite Key',problem:'Uniquely identify a row using two columns together.',code:`CREATE TABLE enrollments (
+  student_id INT,
+  course_id INT,
+  PRIMARY KEY (student_id, course_id)
+);`,notes:'A composite key means the combination of columns must be unique, even if each column alone repeats.'},
+{title:'Views',problem:'Save a complex query as a reusable virtual table.',code:`CREATE VIEW active_users AS
+SELECT * FROM users WHERE status = 'active';
+
+SELECT * FROM active_users; -- reuse it like a normal table`,notes:'A view does not store data itself — it re-runs the underlying query each time it is used.'},
+];
+
+const cheatSheet = {
+  node: [
+    ['Middleware','A function that runs between an incoming request and the final response.'],
+    ['req.body','Data sent in a POST/PUT request body.'],
+    ['req.params','Dynamic values captured from the URL path (/users/:id).'],
+    ['req.query','Values from the query string (?search=value).'],
+    ['JWT','A signed token used to authenticate a user across requests.'],
+    ['Event Loop','What lets Node run non-blocking I/O on a single thread.'],
+    ['CORS','Browser security rule controlling cross-origin requests.'],
+    ['Express','A minimal web framework for building APIs in Node.js.'],
+    ['res.json()','Sends a JSON response from an Express route.'],
+    ['Stream','Processes data in chunks instead of loading it all into memory.'],
+  ],
+  react: [
+    ['Props','Data passed from a parent component down to a child.'],
+    ['State','A component\'s own internal, changeable data.'],
+    ['useState','Hook to declare and update state in a function component.'],
+    ['useEffect','Hook for side effects — API calls, subscriptions, timers.'],
+    ['useRef','Hook to reference a DOM node or store a value without re-rendering.'],
+    ['useContext','Hook to read a value from Context without prop drilling.'],
+    ['useReducer','Hook for state logic with multiple related actions.'],
+    ['useCallback','Memoizes a function so it keeps the same reference across renders.'],
+    ['React.memo','Skips re-rendering a component if its props are unchanged.'],
+    ['Error Boundary','A class component that catches render errors in its children.'],
+    ['React Fragment','Groups elements without adding an extra DOM node (<>...</>).'],
+    ['Key prop','Helps React track which list items changed, were added, or removed.'],
+  ],
+  js: [
+    ['Closure','A function that remembers variables from where it was created.'],
+    ['Hoisting','Function/var declarations are moved to the top of their scope.'],
+    ['this','Refers to different things depending on how a function is called.'],
+    ['Promise','An object representing the eventual result of an async operation.'],
+    ['async / await','Cleaner syntax for working with Promises.'],
+    ['Optional Chaining (?.)','Safely access nested properties without crashing.'],
+    ['Nullish Coalescing (??)','Falls back only on null/undefined, not other falsy values.'],
+    ['map() / filter() / reduce()','Core array transformation methods.'],
+    ['Prototype','How objects inherit methods/properties in JavaScript.'],
+    ['IIFE','A function that runs immediately after being defined.'],
+  ],
+  python: [
+    ['List comprehension','A concise one-line way to build a list.'],
+    ['*args / **kwargs','Collects extra positional / keyword arguments.'],
+    ['Decorator','Wraps a function to extend its behavior.'],
+    ['Generator (yield)','Produces values lazily, one at a time.'],
+    ['self','Refers to the current object instance inside a method.'],
+    ['with statement','A context manager that guarantees cleanup (e.g. closing a file).'],
+    ['List vs Tuple','Lists are mutable, tuples are immutable.'],
+    ['is vs ==','is checks identity, == checks value equality.'],
+  ],
+  java: [
+    ['Overloading','Same method name, different parameters, resolved at compile time.'],
+    ['Overriding','Subclass redefines a parent method, resolved at runtime.'],
+    ['Interface','A pure contract of methods a class must implement.'],
+    ['Abstract Class','A partially implemented class that cannot be instantiated directly.'],
+    ['static','Belongs to the class itself, not any single instance.'],
+    ['final','Locks a variable\'s value, or blocks inheritance/overriding.'],
+    ['equals() vs ==','equals() compares content, == compares object reference.'],
+    ['HashMap','Java\'s key-value store with average O(1) lookup.'],
+  ],
+  sql: [
+    ['Primary Key','Uniquely identifies each row in a table.'],
+    ['Foreign Key','Links a row to a primary key in another table.'],
+    ['INNER JOIN','Returns only rows that match in both tables.'],
+    ['LEFT JOIN','Returns all rows from the left table, matched or not.'],
+    ['GROUP BY','Collapses rows sharing a value into grouped summaries.'],
+    ['HAVING','Filters groups after aggregation (unlike WHERE, which filters rows first).'],
+    ['Index','Speeds up lookups on a column at the cost of extra storage.'],
+    ['Normalization','Splitting data into related tables to reduce duplication.'],
+  ],
 };
 
-User.defaultProps = {
-  age: 18
-};`,
-    notes: 'PropTypes catches wrong prop types in development with a console warning — it does not stop the app, just warns.'
-  }
-];
+const CATEGORY_LABEL = { node:'Node.js', react:'React.js', js:'JavaScript', python:'Python', java:'Java', sql:'SQL' };
+const DATA = { node: nodeQuestions, react: reactQuestions, js: jsQuestions, python: pythonQuestions, java: javaQuestions, sql: sqlQuestions };
 
-const cheatSheet = [
-  ['Props', 'Data passed from a parent component down to a child.'],
-  ['State', "A component's own internal, changeable data."],
-  ['useState', 'Hook to declare and update state in a function component.'],
-  ['useEffect', 'Hook for side effects — API calls, subscriptions, timers.'],
-  ['useRef', 'Hook to reference a DOM node or store a value without re-rendering.'],
-  ['useContext', 'Hook to read a value from Context without prop drilling.'],
-  ['useReducer', 'Hook for state logic with multiple related actions.'],
-  ['map()', 'Transforms every item in an array into something new.'],
-  ['filter()', 'Returns only the array elements that match a condition.'],
-  ['reduce()', 'Folds an array down into a single accumulated value.'],
-  ['Closure', 'A function that remembers variables from where it was created.'],
-  ['Middleware', 'A function that runs between an incoming request and the final response.'],
-  ['req.body', 'Data sent in a POST/PUT request body.'],
-  ['req.params', 'Dynamic values captured from the URL path (/users/:id).'],
-  ['req.query', 'Values from the query string (?search=value).'],
-  ['JWT', 'A signed token used to authenticate a user across requests.'],
-  ['Promise', "An object representing the eventual result of an async operation."],
-  ['async / await', 'Cleaner syntax for working with Promises.'],
-  ['Event Loop', 'What lets Node run non-blocking I/O on a single thread.'],
-  ['CORS', 'Browser security rule controlling cross-origin requests.'],
-  ['Express', 'A minimal web framework for building APIs in Node.js.'],
-  ['res.json()', 'Sends a JSON response from an Express route.'],
-  ['React Fragment', 'Groups elements without adding an extra DOM node (<>...</>).'],
-  ['React.memo', 'Skips re-rendering a component if its props are unchanged.'],
-  ['Error Boundary', 'A class component that catches render errors in its children.'],
-  ['debounce', 'Delays a function call until activity has paused for a bit.'],
-];
-
-/* ============ STATE ============ */
+/* ============================= STATE ============================= */
 const doneSet = new Set();
 let currentView = 'node';
 let currentIndex = 0;
 let searchTerm = '';
+let sheetFilter = 'all';
 
-/* ============ BOOT SEQUENCE ============ */
+/* ============================= THEME ============================= */
+function applyTheme(dark) {
+  document.documentElement.classList.toggle('dark', dark);
+  document.getElementById('themeToggle').textContent = dark ? '☀️' : '🌙';
+  document.getElementById('hljsDark').disabled = !dark;
+  document.getElementById('hljsLight').disabled = dark;
+}
+const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+applyTheme(prefersDark);
+document.getElementById('themeToggle').addEventListener('click', () => {
+  applyTheme(!document.documentElement.classList.contains('dark'));
+});
+
+/* ============================= BOOT ============================= */
 window.addEventListener('load', () => {
   setTimeout(() => {
     document.getElementById('boot').style.transition = 'opacity 0.4s';
     document.getElementById('boot').style.opacity = '0';
-    document.getElementById('app').style.opacity = '1';
+    document.getElementById('appRoot').style.opacity = '1';
     setTimeout(() => document.getElementById('boot').remove(), 450);
-  }, 550);
+  }, 500);
 });
 
-/* ============ HELPERS ============ */
+/* ============================= HELPERS ============================= */
 function activeList() {
-  const list = currentView === 'react' ? reactQuestions : nodeQuestions;
+  const list = DATA[currentView] || [];
   if (!searchTerm) return list;
-  return list.filter(q =>
-    q.title.toLowerCase().includes(searchTerm) ||
-    q.problem.toLowerCase().includes(searchTerm)
-  );
+  return list.filter(q => q.title.toLowerCase().includes(searchTerm) || q.problem.toLowerCase().includes(searchTerm));
 }
-
 function qKey(view, idx) { return view + '-' + idx; }
-function totalCount() { return nodeQuestions.length + reactQuestions.length; }
-
+function totalCount() { return Object.values(DATA).reduce((sum, arr) => sum + arr.length, 0); }
 function updateProgress() {
   const total = totalCount();
   const done = doneSet.size;
@@ -1077,30 +1150,42 @@ function updateProgress() {
   document.getElementById('progressBar').style.width = (total ? (done / total) * 100 : 0) + '%';
 }
 
-/* ============ RENDER: SIDEBAR ============ */
+/* ============================= RENDER: SUBJECT TABS ============================= */
+function renderTabs() {
+  const wrap = document.getElementById('subjectTabs');
+  wrap.innerHTML = '';
+  SUBJECTS.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'subject-tab px-2 py-2 rounded-lg border border-app bg-surface hover:border-accent transition-colors' + (currentView === s.id ? ' active' : '');
+    btn.textContent = s.label;
+    btn.addEventListener('click', () => {
+      currentView = s.id;
+      currentIndex = 0;
+      searchTerm = '';
+      document.getElementById('searchBox').value = '';
+      renderTabs();
+      renderList();
+      renderMain();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+/* ============================= RENDER: SIDEBAR ============================= */
 function renderList() {
   const nav = document.getElementById('questionList');
   nav.innerHTML = '';
 
-  document.querySelectorAll('.round-tab').forEach(btn => {
-    const active = btn.dataset.view === currentView;
-    btn.classList.toggle('bg-amber', active);
-    btn.classList.toggle('text-white', active);
-    btn.classList.toggle('border-amber', active);
-    btn.classList.toggle('font-semibold', active);
-    btn.classList.toggle('text-ink', !active);
-  });
-
   if (currentView === 'sheet') {
-    nav.innerHTML = '<p class="text-xs text-muted font-mono px-1 leading-relaxed">Quick revision table — flip each card to check yourself.</p>';
+    nav.innerHTML = '<p class="text-xs text-mute font-mono px-1 leading-relaxed">Quick revision — pick a subject below to filter terms.</p>';
     return;
   }
 
   const list = activeList();
-  const fullList = currentView === 'react' ? reactQuestions : nodeQuestions;
+  const fullList = DATA[currentView];
 
   if (list.length === 0) {
-    nav.innerHTML = '<p class="text-sm text-muted font-mono px-1">No matches.</p>';
+    nav.innerHTML = '<p class="text-sm text-mute font-mono px-1">No matches.</p>';
     return;
   }
 
@@ -1111,10 +1196,10 @@ function renderList() {
     const isActive = realIdx === currentIndex;
 
     const item = document.createElement('button');
-    item.className = 'side-item shrink-0 md:w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-line bg-white hover:border-amber/60 transition-colors' + (isActive ? ' active' : '') + (isDone ? ' is-done' : '');
+    item.className = 'side-item shrink-0 md:w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-app bg-surface hover:border-accent transition-colors' + (isActive ? ' active' : '') + (isDone ? ' is-done' : '');
     item.innerHTML = `
-      <span class="num-badge shrink-0 w-6 h-6 rounded flex items-center justify-center text-[11px] font-mono font-semibold border border-line text-muted">${isDone ? '✓' : String(realIdx + 1).padStart(2, '0')}</span>
-      <span class="text-xs sm:text-[13px] leading-snug whitespace-nowrap md:whitespace-normal ${isDone ? 'text-muted' : 'text-ink'}">${q.title}</span>
+      <span class="num-badge shrink-0 w-6 h-6 rounded flex items-center justify-center text-[11px] font-mono font-semibold border border-app text-mute">${isDone ? '✓' : String(realIdx + 1).padStart(2, '0')}</span>
+      <span class="text-xs sm:text-[13px] leading-snug whitespace-nowrap md:whitespace-normal ${isDone ? 'text-mute' : 'text-app'}">${q.title}</span>
     `;
     item.addEventListener('click', () => {
       currentIndex = realIdx;
@@ -1125,7 +1210,7 @@ function renderList() {
   });
 }
 
-/* ============ RENDER: MAIN ============ */
+/* ============================= RENDER: MAIN ============================= */
 function renderMain() {
   const main = document.getElementById('mainPanel');
 
@@ -1134,53 +1219,51 @@ function renderMain() {
     return;
   }
 
-  const fullList = currentView === 'react' ? reactQuestions : nodeQuestions;
+  const fullList = DATA[currentView];
   const q = fullList[currentIndex];
   if (!q) {
-    main.innerHTML = '<p class="text-muted font-mono text-sm">Select a question from the list.</p>';
+    main.innerHTML = '<p class="text-mute font-mono text-sm">Select a question from the list.</p>';
     return;
   }
   const key = qKey(currentView, currentIndex);
   const isDone = doneSet.has(key);
 
   main.innerHTML = `
-    <div class="bg-white border border-line rounded-2xl p-5 sm:p-7 shadow-sm">
+    <div class="bg-surface border border-app rounded-2xl p-5 sm:p-7 shadow-sm">
       <div class="flex items-start justify-between gap-4 mb-4">
         <div>
-          <p class="font-mono text-xs text-amber tracking-widest mb-1.5">${currentView === 'react' ? 'REACT.JS' : 'NODE.JS'} — Q${String(currentIndex + 1).padStart(2, '0')}</p>
-          <h2 class="text-lg sm:text-xl font-semibold text-ink">${q.title}</h2>
+          <p class="font-mono text-xs text-accent tracking-widest mb-1.5">${CATEGORY_LABEL[currentView].toUpperCase()} — Q${String(currentIndex + 1).padStart(2, '0')}</p>
+          <h2 class="text-lg sm:text-xl font-semibold text-app">${q.title}</h2>
         </div>
-        <button id="doneToggle" class="shrink-0 font-mono text-xs px-3 py-2 rounded-lg border transition-colors ${isDone ? 'border-done text-done bg-doneSoft' : 'border-line text-muted hover:border-amber hover:text-amber'}">
+        <button id="doneToggle" class="shrink-0 font-mono text-xs px-3 py-2 rounded-lg border transition-colors ${isDone ? 'border-success text-success bg-success-soft' : 'border-app text-mute hover:border-accent hover:text-accent'}">
           ${isDone ? '✓ Done' : 'Mark done'}
         </button>
       </div>
 
-      <p class="text-sm sm:text-[15px] text-ink/90 leading-relaxed mb-5">${q.problem}</p>
+      <p class="text-sm sm:text-[15px] text-app/90 leading-relaxed mb-5">${q.problem}</p>
 
       <div class="mb-4">
-        <button id="revealBtn" class="font-mono text-xs px-4 py-2.5 rounded-lg bg-amber text-white font-semibold hover:bg-amber/90 transition-colors">
-          Show answer
-        </button>
+        <button id="revealBtn" class="font-mono text-xs px-4 py-2.5 rounded-lg bg-accent text-white font-semibold hover:opacity-90 transition-opacity">Show answer</button>
       </div>
 
       <div id="answerBlock" class="hidden">
         <div class="code-shell rounded-xl overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-2 border-b border-line">
-            <span class="text-[11px] font-mono text-muted">solution.js</span>
-            <button id="copyBtn" class="text-[11px] font-mono text-muted hover:text-amber transition-colors">Copy</button>
+          <div class="flex items-center justify-between px-4 py-2 border-b border-app">
+            <span class="text-[11px] font-mono text-mute">solution</span>
+            <button id="copyBtn" class="text-[11px] font-mono text-mute hover:text-accent transition-colors">Copy</button>
           </div>
           <pre class="p-4 overflow-x-auto"><code class="language-javascript" id="codeBlock"></code></pre>
         </div>
-        <div class="mt-3 flex gap-2.5 bg-amberSoft border border-amber/25 rounded-lg px-4 py-3">
-          <span class="text-amber font-mono text-xs shrink-0 mt-0.5">note</span>
-          <p class="text-xs sm:text-[13px] text-ink/70 leading-relaxed">${q.notes}</p>
+        <div class="mt-3 flex gap-2.5 bg-accent-soft border border-accent/25 rounded-lg px-4 py-3">
+          <span class="text-accent font-mono text-xs shrink-0 mt-0.5">note</span>
+          <p class="text-xs sm:text-[13px] text-app/70 leading-relaxed">${q.notes}</p>
         </div>
       </div>
 
-      <div class="flex items-center justify-between mt-6 pt-5 border-t border-line">
-        <button id="prevBtn" class="font-mono text-xs px-3 py-2 rounded-lg border border-line text-muted hover:text-ink hover:border-ink/30 transition-colors disabled:opacity-30" ${currentIndex === 0 ? 'disabled' : ''}>&larr; Prev</button>
-        <span class="font-mono text-xs text-muted">${currentIndex + 1} of ${fullList.length}</span>
-        <button id="nextBtn" class="font-mono text-xs px-3 py-2 rounded-lg border border-line text-muted hover:text-ink hover:border-ink/30 transition-colors disabled:opacity-30" ${currentIndex === fullList.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
+      <div class="flex items-center justify-between mt-6 pt-5 border-t border-app">
+        <button id="prevBtn" class="font-mono text-xs px-3 py-2 rounded-lg border border-app text-mute hover:text-app hover:border-accent/50 transition-colors disabled:opacity-30" ${currentIndex === 0 ? 'disabled' : ''}>&larr; Prev</button>
+        <span class="font-mono text-xs text-mute">${currentIndex + 1} of ${fullList.length}</span>
+        <button id="nextBtn" class="font-mono text-xs px-3 py-2 rounded-lg border border-app text-mute hover:text-app hover:border-accent/50 transition-colors disabled:opacity-30" ${currentIndex === fullList.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
       </div>
     </div>
   `;
@@ -1188,24 +1271,18 @@ function renderMain() {
   document.getElementById('codeBlock').textContent = q.code;
 
   document.getElementById('revealBtn').addEventListener('click', () => {
-    const block = document.getElementById('answerBlock');
-    block.classList.toggle('hidden');
+    document.getElementById('answerBlock').classList.toggle('hidden');
     hljs.highlightElement(document.getElementById('codeBlock'));
   });
-
   document.getElementById('copyBtn').addEventListener('click', (e) => {
     navigator.clipboard.writeText(q.code);
     e.target.textContent = 'Copied!';
     setTimeout(() => { e.target.textContent = 'Copy'; }, 1200);
   });
-
   document.getElementById('doneToggle').addEventListener('click', () => {
     if (doneSet.has(key)) doneSet.delete(key); else doneSet.add(key);
-    updateProgress();
-    renderList();
-    renderMain();
+    updateProgress(); renderList(); renderMain();
   });
-
   document.getElementById('prevBtn').addEventListener('click', () => {
     if (currentIndex > 0) { currentIndex--; renderList(); renderMain(); }
   });
@@ -1215,24 +1292,41 @@ function renderMain() {
 }
 
 function renderSheet(main) {
+  const filters = ['all', ...Object.keys(cheatSheet)];
   main.innerHTML = `
     <div class="mb-5">
-      <p class="font-mono text-xs text-amber tracking-widest mb-1.5">CHEAT SHEET</p>
-      <h2 class="text-lg sm:text-xl font-semibold text-ink">Last-minute revision — tap a card to flip</h2>
+      <p class="font-mono text-xs text-accent tracking-widest mb-1.5">CHEAT SHEET</p>
+      <h2 class="text-lg sm:text-xl font-semibold text-app mb-4">Last-minute revision — tap a card to flip</h2>
+      <div class="flex flex-wrap gap-1.5 font-mono text-xs" id="sheetFilters"></div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5" id="sheetGrid"></div>
   `;
+
+  const filterWrap = document.getElementById('sheetFilters');
+  filters.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'chip px-3 py-1.5 rounded-full border border-app bg-surface hover:border-accent transition-colors' + (sheetFilter === f ? ' active' : '');
+    btn.textContent = f === 'all' ? 'All' : CATEGORY_LABEL[f];
+    btn.addEventListener('click', () => { sheetFilter = f; renderSheet(main); });
+    filterWrap.appendChild(btn);
+  });
+
   const grid = document.getElementById('sheetGrid');
-  cheatSheet.forEach(([term, def]) => {
+  const entries = sheetFilter === 'all'
+    ? Object.entries(cheatSheet).flatMap(([cat, items]) => items.map(item => [cat, ...item]))
+    : (cheatSheet[sheetFilter] || []).map(item => [sheetFilter, ...item]);
+
+  entries.forEach(([cat, term, def]) => {
     const card = document.createElement('div');
     card.className = 'flip-card h-28 cursor-pointer';
     card.innerHTML = `
-      <div class="flip-inner relative w-full h-full">
-        <div class="flip-face absolute inset-0 bg-white border border-line rounded-xl flex items-center justify-center px-4 shadow-sm">
-          <p class="font-mono text-sm font-semibold text-ink text-center">${term}</p>
+      <div class="flip-inner w-full h-full">
+        <div class="flip-face absolute inset-0 bg-surface border border-app rounded-xl flex flex-col items-center justify-center px-4 shadow-sm">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-widest mb-1">${CATEGORY_LABEL[cat]}</span>
+          <p class="font-mono text-sm font-semibold text-app text-center">${term}</p>
         </div>
-        <div class="flip-face flip-back absolute inset-0 bg-amberSoft border border-amber/30 rounded-xl flex items-center justify-center px-4">
-          <p class="text-xs text-ink/70 text-center leading-relaxed">${def}</p>
+        <div class="flip-face flip-back absolute inset-0 bg-accent-soft border border-accent/30 rounded-xl flex items-center justify-center px-4">
+          <p class="text-xs text-app/70 text-center leading-relaxed">${def}</p>
         </div>
       </div>
     `;
@@ -1241,78 +1335,50 @@ function renderSheet(main) {
   });
 }
 
-/* ============ EVENTS ============ */
-document.querySelectorAll('.round-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentView = btn.dataset.view;
-    currentIndex = 0;
-    searchTerm = '';
-    document.getElementById('searchBox').value = '';
-    renderList();
-    renderMain();
-  });
-});
-
+/* ============================= SEARCH ============================= */
 document.getElementById('searchBox').addEventListener('input', (e) => {
   searchTerm = e.target.value.toLowerCase();
   renderList();
 });
 
-/* ============ TIMER ============ */
-let timeLeft = 900;
-let timerInterval = null;
-let timerRunning = false;
-
-function formatTime(s) {
-  const m = Math.floor(s / 60).toString().padStart(2, '0');
-  const sec = (s % 60).toString().padStart(2, '0');
-  return m + ':' + sec;
-}
-
+/* ============================= TIMER ============================= */
+let timeLeft = 900, timerInterval = null, timerRunning = false;
+function formatTime(s) { const m=Math.floor(s/60).toString().padStart(2,'0'); const sec=(s%60).toString().padStart(2,'0'); return m+':'+sec; }
 function updateTimerDisplay() {
   const el = document.getElementById('timerDisplay');
   el.textContent = formatTime(timeLeft);
-  el.classList.toggle('text-red-500', timeLeft <= 60);
-  el.classList.toggle('text-amber', timeLeft > 60);
+  el.classList.toggle('text-danger', timeLeft <= 60);
+  el.classList.toggle('text-accent', timeLeft > 60);
 }
-
 document.getElementById('timerToggle').addEventListener('click', (e) => {
   timerRunning = !timerRunning;
   e.target.textContent = timerRunning ? 'Pause' : 'Start';
   if (timerRunning) {
     timerInterval = setInterval(() => {
-      if (timeLeft > 0) {
-        timeLeft--;
-        updateTimerDisplay();
-      } else {
-        clearInterval(timerInterval);
-        timerRunning = false;
+      if (timeLeft > 0) { timeLeft--; updateTimerDisplay(); }
+      else {
+        clearInterval(timerInterval); timerRunning = false;
         document.getElementById('timerToggle').textContent = 'Start';
         document.getElementById('timerDisplay').textContent = "Time's up";
       }
     }, 1000);
-  } else {
-    clearInterval(timerInterval);
-  }
+  } else clearInterval(timerInterval);
 });
-
 document.getElementById('timerReset').addEventListener('click', () => {
-  clearInterval(timerInterval);
-  timerRunning = false;
+  clearInterval(timerInterval); timerRunning = false;
   document.getElementById('timerToggle').textContent = 'Start';
   timeLeft = parseInt(document.getElementById('timerSelect').value, 10);
   updateTimerDisplay();
 });
-
 document.getElementById('timerSelect').addEventListener('change', (e) => {
-  clearInterval(timerInterval);
-  timerRunning = false;
+  clearInterval(timerInterval); timerRunning = false;
   document.getElementById('timerToggle').textContent = 'Start';
   timeLeft = parseInt(e.target.value, 10);
   updateTimerDisplay();
 });
 
-/* ============ INIT ============ */
+/* ============================= INIT ============================= */
+renderTabs();
 renderList();
 renderMain();
 updateProgress();
