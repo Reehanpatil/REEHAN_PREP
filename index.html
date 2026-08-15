@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -15,15 +15,16 @@
     theme: {
       extend: {
         colors: {
-          ink: '#0B1120',
-          panel: '#121B2E',
-          panel2: '#0F1729',
-          line: '#1E293B',
-          amber: '#FFB000',
-          amberDim: '#7A5A10',
-          done: '#4ADE80',
-          ivory: '#E8EAED',
-          muted: '#8B98AE',
+          page: '#FFFFFF',
+          panel: '#FFFFFF',
+          panel2: '#F6F7F9',
+          line: '#E4E7EC',
+          amber: '#B45309',
+          amberSoft: '#FEF3E2',
+          done: '#15803D',
+          doneSoft: '#EAF7EE',
+          ink: '#14181F',
+          muted: '#68707C',
         },
         fontFamily: {
           mono: ['"IBM Plex Mono"', 'monospace'],
@@ -34,21 +35,19 @@
   }
 </script>
 <style>
-  * { scrollbar-width: thin; scrollbar-color: #1E293B transparent; }
+  * { scrollbar-width: thin; scrollbar-color: #E4E7EC transparent; }
   ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb { background: #E4E7EC; border-radius: 8px; }
 
   body {
-    background-color: #0B1120;
-    background-image:
-      radial-gradient(circle at 15% 0%, rgba(255,176,0,0.06), transparent 40%),
-      repeating-linear-gradient(180deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+    background-color: #FFFFFF;
+    background-image: radial-gradient(circle at 12% 0%, rgba(180,83,9,0.05), transparent 42%);
   }
 
-  .crt-flicker { animation: flicker 5s infinite; }
+  .dot { animation: flicker 5s infinite; }
   @keyframes flicker {
     0%, 96%, 100% { opacity: 1; }
-    97% { opacity: 0.85; }
+    97% { opacity: 0.6; }
     98% { opacity: 1; }
   }
 
@@ -57,7 +56,7 @@
     display: inline-block;
     width: 0.55em;
     height: 1em;
-    background: #FFB000;
+    background: #B45309;
     margin-left: 4px;
     vertical-align: -2px;
     animation: blink 1s steps(1) infinite;
@@ -71,51 +70,32 @@
     line-height: 1.65;
   }
   .code-shell {
-    background: #0A0F1D;
-    border: 1px solid #1E293B;
-  }
-
-  .board-num {
-    font-variant-numeric: tabular-nums;
-    text-shadow: 0 0 12px rgba(255,176,0,0.35);
+    background: #F6F7F9;
+    border: 1px solid #E4E7EC;
   }
 
   .flip-card { perspective: 1000px; }
-  .flip-inner {
-    transition: transform 0.5s;
-    transform-style: preserve-3d;
-  }
+  .flip-inner { transition: transform 0.5s; transform-style: preserve-3d; }
   .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
-  .flip-face {
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  }
+  .flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
   .flip-back { transform: rotateY(180deg); }
 
   @media (prefers-reduced-motion: reduce) {
-    .crt-flicker, .cursor-blink::after, .flip-inner { animation: none !important; transition: none !important; }
+    .dot, .cursor-blink::after, .flip-inner { animation: none !important; transition: none !important; }
   }
 
-  .side-item.active {
-    background: rgba(255,176,0,0.08);
-    border-color: #FFB000;
-  }
-  .side-item.is-done .num-badge {
-    background: rgba(74,222,128,0.12);
-    border-color: #4ADE80;
-    color: #4ADE80;
-  }
+  .side-item.active { background: #FEF3E2; border-color: #B45309; }
+  .side-item.is-done .num-badge { background: #EAF7EE; border-color: #15803D; color: #15803D; }
 
   input:focus, button:focus, select:focus {
-    outline: 2px solid #FFB000;
+    outline: 2px solid #B45309;
     outline-offset: 2px;
   }
 </style>
 </head>
-<body class="bg-ink text-ivory font-sans min-h-screen">
+<body class="bg-page text-ink min-h-screen font-sans">
 
-<!-- BOOT OVERLAY -->
-<div id="boot" class="fixed inset-0 z-50 bg-ink flex items-center justify-center font-mono text-amber">
+<div id="boot" class="fixed inset-0 z-50 bg-white flex items-center justify-center font-mono text-amber">
   <div class="text-center px-6">
     <p id="bootLine" class="text-sm sm:text-base tracking-wide">&gt; initializing interview_prep.exe<span class="cursor-blink"></span></p>
   </div>
@@ -123,24 +103,22 @@
 
 <div id="app" class="opacity-0 transition-opacity duration-500">
 
-  <!-- TOPBAR -->
-  <header class="border-b border-line bg-panel2/80 backdrop-blur sticky top-0 z-40">
+  <header class="border-b border-line bg-white/90 backdrop-blur sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-3 justify-between">
       <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-amber crt-flicker"></span>
-        <h1 class="font-mono font-semibold text-sm sm:text-base tracking-tight">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber dot"></span>
+        <h1 class="font-mono font-semibold text-sm sm:text-base tracking-tight text-ink">
           REEHAN<span class="text-muted">_</span>PREP<span class="text-amber">.exe</span>
         </h1>
-        <span class="hidden sm:inline text-xs text-muted font-mono ml-2">Node.js round → React.js round</span>
+        <span class="hidden sm:inline text-xs text-muted font-mono ml-2">General Node.js &amp; React.js interview bank</span>
       </div>
 
       <div class="flex items-center gap-4">
-        <!-- Timer -->
-        <div class="flex items-center gap-2 font-mono text-sm bg-panel border border-line rounded-lg px-3 py-1.5">
-          <span id="timerDisplay" class="board-num text-amber font-semibold text-base w-[52px] text-center">15:00</span>
+        <div class="flex items-center gap-2 font-mono text-sm bg-panel2 border border-line rounded-lg px-3 py-1.5">
+          <span id="timerDisplay" class="text-amber font-semibold text-base w-[52px] text-center">15:00</span>
           <button id="timerToggle" class="text-xs px-2 py-1 rounded border border-line hover:border-amber hover:text-amber transition-colors">Start</button>
           <button id="timerReset" class="text-xs px-2 py-1 rounded border border-line hover:border-amber hover:text-amber transition-colors">Reset</button>
-          <select id="timerSelect" class="bg-panel text-xs border border-line rounded px-1 py-1 text-muted hover:text-ivory">
+          <select id="timerSelect" class="bg-white text-xs border border-line rounded px-1 py-1 text-muted hover:text-ink">
             <option value="900">15 min</option>
             <option value="600">10 min</option>
             <option value="300">5 min</option>
@@ -149,7 +127,6 @@
       </div>
     </div>
 
-    <!-- Progress bar -->
     <div class="h-1 bg-line/60 w-full">
       <div id="progressBar" class="h-1 bg-amber transition-all duration-500" style="width:0%"></div>
     </div>
@@ -157,34 +134,28 @@
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
 
-    <!-- SIDEBAR -->
     <aside class="md:sticky md:top-[86px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
-
-      <!-- Round tabs -->
       <div class="grid grid-cols-3 gap-1.5 mb-4 font-mono text-xs">
-        <button data-view="node" class="round-tab px-2 py-2 rounded-lg border border-line bg-panel hover:border-amber transition-colors">Node.js</button>
-        <button data-view="react" class="round-tab px-2 py-2 rounded-lg border border-line bg-panel hover:border-amber transition-colors">React.js</button>
-        <button data-view="sheet" class="round-tab px-2 py-2 rounded-lg border border-line bg-panel hover:border-amber transition-colors">Cheat Sheet</button>
+        <button data-view="node" class="round-tab px-2 py-2 rounded-lg border border-line bg-white hover:border-amber transition-colors">Node.js</button>
+        <button data-view="react" class="round-tab px-2 py-2 rounded-lg border border-line bg-white hover:border-amber transition-colors">React.js</button>
+        <button data-view="sheet" class="round-tab px-2 py-2 rounded-lg border border-line bg-white hover:border-amber transition-colors">Cheat Sheet</button>
       </div>
 
-      <!-- Search -->
       <div class="relative mb-3">
-        <input id="searchBox" type="text" placeholder="Search problems…" class="w-full bg-panel border border-line rounded-lg pl-3 pr-3 py-2 text-sm placeholder:text-muted focus:border-amber transition-colors">
+        <input id="searchBox" type="text" placeholder="Search problems…" class="w-full bg-white border border-line rounded-lg pl-3 pr-3 py-2 text-sm placeholder:text-muted focus:border-amber transition-colors">
       </div>
 
       <p class="text-[11px] uppercase tracking-widest text-muted font-mono mb-2 px-1">Progress: <span id="progressText" class="text-amber">0 / 0</span></p>
 
-      <!-- Question list -->
       <nav id="questionList" class="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0"></nav>
     </aside>
 
-    <!-- MAIN -->
     <main id="mainPanel" class="min-w-0"></main>
 
   </div>
 
   <footer class="max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-4 text-center text-xs text-muted font-mono">
-    &gt; good luck, Reehan. 15 minutes hai — likho jaldi, panic mat karo.
+    &gt; general practice bank — kisi bhi Node/React interview ke liye use karo.
   </footer>
 </div>
 
@@ -284,7 +255,7 @@ getData().then((data) => {
 getUser((message) => {
   console.log(message);
 });`,
-    notes: 'Callback = a function passed as an argument, called later once the async work is done. This is the pattern Promises were built to replace.'
+    notes: 'Callback = a function passed as an argument, called later once the async work is done.'
   },
   {
     title: 'Sequential vs Parallel Async Calls',
@@ -310,7 +281,7 @@ function fetchData(id) {
     setTimeout(() => resolve(id + ' done'), 1000)
   );
 }`,
-    notes: 'Use Promise.all() when calls do not depend on each other — it can cut total wait time significantly.'
+    notes: 'Use Promise.all() when calls do not depend on each other — cuts total wait time.'
   },
   {
     title: 'Express — GET Route',
@@ -357,7 +328,7 @@ app.listen(3000);`,
 };
 
 app.use(logger);`,
-    notes: 'A middleware is just a function that runs between the request and the response. Forgetting next() is the #1 mistake — the request will hang forever.'
+    notes: 'A middleware runs between the request and the response. Forgetting next() hangs the request forever.'
   },
   {
     title: 'Error Handling in a Route',
@@ -384,7 +355,7 @@ app.use(logger);`,
 // req.params → URL path params (/users/:id)
 // req.query  → query string (?search=value)
 // req.body   → data sent in POST/PUT`,
-    notes: 'This distinction is one of the most commonly asked Node questions — know it cold.'
+    notes: 'One of the most commonly asked Node questions — know this cold.'
   },
   {
     title: 'JWT — Generate a Token',
@@ -398,7 +369,7 @@ const token = jwt.sign(
 );
 
 console.log(token);`,
-    notes: 'jwt.sign() creates a token, jwt.verify() checks one. Never hardcode the secret — always pull it from an environment variable in real code.'
+    notes: 'jwt.sign() creates a token, jwt.verify() checks one. Never hardcode the secret — use an environment variable.'
   },
   {
     title: 'Filter Even Numbers',
@@ -425,6 +396,204 @@ const adults = users.filter(user => user.age > 18);
 console.log(adults);
 // [{ name: 'B', age: 22 }, { name: 'C', age: 30 }]`,
     notes: 'Same filter() pattern, just checking a property on each object instead of the raw value.'
+  },
+  {
+    title: 'Event Loop — Why This Order?',
+    problem: 'Explain why this code logs "1, 4, 3, 2" instead of "1, 2, 3, 4".',
+    code: `console.log('1');
+
+setTimeout(() => console.log('2'), 0);
+
+Promise.resolve().then(() => console.log('3'));
+
+console.log('4');
+
+// Output: 1, 4, 3, 2`,
+    notes: 'Sync code runs first (1, 4). Then microtasks — Promises (3). Then macrotasks — setTimeout (2), even with 0ms delay.'
+  },
+  {
+    title: 'let vs const vs var',
+    problem: 'Explain the difference and show why var can cause bugs.',
+    code: `for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+// logs 3, 3, 3 — var is function-scoped, shared by all callbacks
+
+for (let j = 0; j < 3; j++) {
+  setTimeout(() => console.log(j), 100);
+}
+// logs 0, 1, 2 — let is block-scoped, each loop gets its own j`,
+    notes: 'const = cannot be reassigned. let = block-scoped, reassignable. var = function-scoped, avoid it in modern code.'
+  },
+  {
+    title: '== vs ===',
+    problem: 'Explain the difference between loose and strict equality.',
+    code: `console.log(1 == '1');   // true  — converts types before comparing
+console.log(1 === '1');  // false — no type conversion, must match exactly
+
+console.log(null == undefined);   // true
+console.log(null === undefined);  // false`,
+    notes: 'Always prefer === in real code — it avoids surprising type-coercion bugs.'
+  },
+  {
+    title: 'Closures',
+    problem: 'Write a function that returns a counter which remembers its own count.',
+    code: `function createCounter() {
+  let count = 0;
+  return function () {
+    count++;
+    return count;
+  };
+}
+
+const counter = createCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2`,
+    notes: 'A closure is a function that "remembers" variables from the scope it was created in, even after that scope has finished running.'
+  },
+  {
+    title: 'Higher-Order Functions',
+    problem: 'Write a function that takes another function as an argument and applies it to every array element.',
+    code: `function applyToAll(arr, fn) {
+  return arr.map(fn);
+}
+
+console.log(applyToAll([1, 2, 3], (n) => n * 2));
+// [2, 4, 6]`,
+    notes: 'A higher-order function either takes a function as an argument or returns one. map/filter/reduce are all built-in examples.'
+  },
+  {
+    title: 'Array reduce() — Sum of Values',
+    problem: 'Sum all numbers in an array using reduce().',
+    code: `const numbers = [1, 2, 3, 4, 5];
+
+const total = numbers.reduce((sum, n) => sum + n, 0);
+
+console.log(total); // 15`,
+    notes: 'reduce(callback, initialValue) — the callback runs once per element, carrying an accumulator forward.'
+  },
+  {
+    title: 'Debounce Function',
+    problem: 'Write a debounce function that delays running a function until the user has stopped triggering it.',
+    code: `function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
+
+const search = debounce((query) => console.log('Searching:', query), 300);
+search('a');
+search('ab');
+search('abc'); // only this one actually runs, after 300ms`,
+    notes: 'Common for search boxes — avoids firing an API call on every single keystroke.'
+  },
+  {
+    title: 'Deep Clone an Object',
+    problem: 'Create a true copy of a nested object so editing the copy does not affect the original.',
+    code: `const original = { name: 'Reehan', address: { city: 'Belagavi' } };
+
+const shallow = { ...original };           // nested objects still shared!
+const deep = JSON.parse(JSON.stringify(original)); // safe for simple data
+// or, in modern environments:
+const deep2 = structuredClone(original);`,
+    notes: 'Spread (...) only copies one level deep. JSON trick or structuredClone() copies everything, but JSON loses functions/dates.'
+  },
+  {
+    title: 'CommonJS — module.exports / require',
+    problem: 'Export a function from one file and use it in another.',
+    code: `// math.js
+function add(a, b) {
+  return a + b;
+}
+module.exports = { add };
+
+// app.js
+const { add } = require('./math');
+console.log(add(2, 3)); // 5`,
+    notes: 'module.exports defines what a file shares. require() pulls it into another file. This is Node\'s original module system (CommonJS).'
+  },
+  {
+    title: 'Read a File (fs module)',
+    problem: 'Read a text file asynchronously without blocking the server.',
+    code: `const fs = require('fs');
+
+fs.readFile('data.txt', 'utf8', (err, data) => {
+  if (err) {
+    console.log('Error:', err);
+    return;
+  }
+  console.log(data);
+});`,
+    notes: 'The callback runs once the file is read — the rest of the server keeps running in the meantime (non-blocking I/O).'
+  },
+  {
+    title: 'Environment Variables (dotenv)',
+    problem: 'Keep secrets like API keys out of your code using environment variables.',
+    code: `// .env file
+// PORT=3000
+// DB_URL=mongodb://localhost/mydb
+
+require('dotenv').config();
+
+const port = process.env.PORT;
+console.log('Server will run on', port);`,
+    notes: 'Never commit a .env file to GitHub — add it to .gitignore. process.env is how Node reads them.'
+  },
+  {
+    title: 'Enable CORS in Express',
+    problem: 'Allow a frontend on a different domain/port to call your API.',
+    code: `const express = require('express');
+const cors = require('cors');
+const app = express();
+
+app.use(cors());
+
+app.get('/data', (req, res) => {
+  res.json({ message: 'CORS enabled' });
+});`,
+    notes: 'Without CORS, browsers block requests from a different origin (e.g. localhost:3000 → localhost:5000) by default.'
+  },
+  {
+    title: 'PUT vs PATCH',
+    problem: 'Explain the difference between the two HTTP methods.',
+    code: `// PUT — replaces the ENTIRE resource
+app.put('/users/:id', (req, res) => {
+  // expects the full user object in req.body
+});
+
+// PATCH — updates only PART of the resource
+app.patch('/users/:id', (req, res) => {
+  // expects only the fields that changed
+});`,
+    notes: 'PUT = full replace. PATCH = partial update. A commonly confused REST question.'
+  },
+  {
+    title: 'Flatten a Nested Array',
+    problem: 'Turn [1, [2, 3], [4, [5, 6]]] into a single flat array.',
+    code: `const nested = [1, [2, 3], [4, [5, 6]]];
+
+const flat = nested.flat(Infinity);
+
+console.log(flat);
+// [1, 2, 3, 4, 5, 6]`,
+    notes: 'flat(Infinity) flattens no matter how deeply nested the array is. flat() alone only goes one level deep.'
+  },
+  {
+    title: 'Sort an Array of Objects',
+    problem: 'Sort a list of users by age, youngest first.',
+    code: `const users = [
+  { name: 'A', age: 30 },
+  { name: 'B', age: 15 },
+  { name: 'C', age: 22 }
+];
+
+users.sort((a, b) => a.age - b.age);
+
+console.log(users);
+// B (15), C (22), A (30)`,
+    notes: 'sort()\'s compare function: negative → a comes first, positive → b comes first. a.age - b.age gives ascending order.'
   }
 ];
 
@@ -554,7 +723,7 @@ function Users() {
 
   return <h1>Users</h1>;
 }`,
-    notes: 'An empty dependency array [] means the effect runs once, right after the first render — perfect for initial data fetches.'
+    notes: 'An empty dependency array [] means the effect runs once, right after the first render.'
   },
   {
     title: 'API Fetch + Display List',
@@ -620,6 +789,226 @@ const result = useMemo(() => {
   return expensiveCalculation(value);
 }, [value]);`,
     notes: 'useMemo caches the result and only recalculates when a value in the dependency array actually changes.'
+  },
+  {
+    title: 'useRef — Focus an Input',
+    problem: 'Automatically focus a text input when a button is clicked.',
+    code: `import { useRef } from 'react';
+
+function SearchBox() {
+  const inputRef = useRef(null);
+
+  const focusInput = () => {
+    inputRef.current.focus();
+  };
+
+  return (
+    <>
+      <input ref={inputRef} type="text" />
+      <button onClick={focusInput}>Focus</button>
+    </>
+  );
+}`,
+    notes: 'useRef gives direct access to a DOM element without causing a re-render — unlike state, updating a ref does not trigger a render.'
+  },
+  {
+    title: 'useContext — Share Data Without Prop Drilling',
+    problem: 'Share a theme value with deeply nested components without passing props at every level.',
+    code: `import { createContext, useContext } from 'react';
+
+const ThemeContext = createContext('light');
+
+function App() {
+  return (
+    <ThemeContext.Provider value="dark">
+      <Toolbar />
+    </ThemeContext.Provider>
+  );
+}
+
+function Toolbar() {
+  const theme = useContext(ThemeContext);
+  return <p>Current theme: {theme}</p>;
+}`,
+    notes: 'Context avoids "prop drilling" — passing a prop through many layers that do not actually need it themselves.'
+  },
+  {
+    title: 'Custom Hook — useFetch',
+    problem: 'Extract repeated fetch + loading logic into a reusable custom hook.',
+    code: `import { useState, useEffect } from 'react';
+
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(url)
+      .then(res => res.json())
+      .then(json => {
+        setData(json);
+        setLoading(false);
+      });
+  }, [url]);
+
+  return { data, loading };
+}
+
+// usage
+function Users() {
+  const { data, loading } = useFetch('/api/users');
+  if (loading) return <p>Loading...</p>;
+  return <p>{data.length} users found</p>;
+}`,
+    notes: 'A custom hook is just a function starting with "use" that reuses stateful logic across components.'
+  },
+  {
+    title: 'useReducer — Complex State',
+    problem: 'Manage state with multiple related actions using useReducer instead of several useState calls.',
+    code: `import { useReducer } from 'react';
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment': return { count: state.count + 1 };
+    case 'decrement': return { count: state.count - 1 };
+    default: return state;
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, { count: 0 });
+
+  return (
+    <>
+      <p>{state.count}</p>
+      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+    </>
+  );
+}`,
+    notes: 'Prefer useReducer over useState when state logic gets complex, or the next state depends on the previous one in several ways.'
+  },
+  {
+    title: 'Lifting State Up',
+    problem: 'Two sibling components need to share the same value — how do they stay in sync?',
+    code: `function Parent() {
+  const [value, setValue] = useState('');
+
+  return (
+    <>
+      <InputBox value={value} onChange={setValue} />
+      <Preview value={value} />
+    </>
+  );
+}
+
+function InputBox({ value, onChange }) {
+  return <input value={value} onChange={(e) => onChange(e.target.value)} />;
+}
+
+function Preview({ value }) {
+  return <p>You typed: {value}</p>;
+}`,
+    notes: 'Move the shared state up to the closest common parent, then pass it down as props — this is "lifting state up."'
+  },
+  {
+    title: 'React.memo — Skip Unnecessary Re-renders',
+    problem: 'Prevent a child component from re-rendering when its props have not changed.',
+    code: `const ProductCard = React.memo(function ProductCard({ name, price }) {
+  console.log('Rendering:', name);
+  return <div>{name} - ₹{price}</div>;
+});`,
+    notes: 'React.memo does a shallow comparison of props — if nothing changed, it skips re-rendering that component.'
+  },
+  {
+    title: 'Debounced Search Input',
+    problem: 'Wait until the user stops typing before firing a search API call.',
+    code: `import { useState, useEffect } from 'react';
+
+function Search() {
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (query) console.log('Searching for:', query);
+    }, 500);
+
+    return () => clearTimeout(timer); // cleanup on every keystroke
+  }, [query]);
+
+  return <input value={query} onChange={(e) => setQuery(e.target.value)} />;
+}`,
+    notes: 'The cleanup function (return () => ...) cancels the previous timer every time query changes, so only the last keystroke fires the search.'
+  },
+  {
+    title: 'Error Boundary',
+    problem: 'Catch a rendering error in a component tree so the whole app does not crash.',
+    code: `class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h2>Something went wrong.</h2>;
+    }
+    return this.props.children;
+  }
+}
+
+// usage
+<ErrorBoundary>
+  <BuggyComponent />
+</ErrorBoundary>`,
+    notes: 'Error boundaries must be class components (no hook equivalent yet). They catch errors thrown anywhere below them in the tree.'
+  },
+  {
+    title: 'Conditional className',
+    problem: 'Apply an "active" CSS class only when a condition is true.',
+    code: `function Tab({ isActive, label }) {
+  return (
+    <button className={\`tab \${isActive ? 'tab-active' : ''}\`}>
+      {label}
+    </button>
+  );
+}`,
+    notes: 'Template literals make it easy to build conditional class strings without a library.'
+  },
+  {
+    title: 'React.lazy + Suspense — Code Splitting',
+    problem: 'Load a heavy component only when it is actually needed, not on initial page load.',
+    code: `import { lazy, Suspense } from 'react';
+
+const Settings = lazy(() => import('./Settings'));
+
+function App() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <Settings />
+    </Suspense>
+  );
+}`,
+    notes: 'lazy() splits that component into a separate bundle, downloaded only when it renders. Suspense shows a fallback while it loads.'
+  },
+  {
+    title: 'PropTypes / Default Props',
+    problem: 'Validate the props a component receives and give one a default value.',
+    code: `import PropTypes from 'prop-types';
+
+function User({ name, age }) {
+  return <p>{name} is {age} years old</p>;
+}
+
+User.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number
+};
+
+User.defaultProps = {
+  age: 18
+};`,
+    notes: 'PropTypes catches wrong prop types in development with a console warning — it does not stop the app, just warns.'
   }
 ];
 
@@ -628,8 +1017,13 @@ const cheatSheet = [
   ['State', "A component's own internal, changeable data."],
   ['useState', 'Hook to declare and update state in a function component.'],
   ['useEffect', 'Hook for side effects — API calls, subscriptions, timers.'],
+  ['useRef', 'Hook to reference a DOM node or store a value without re-rendering.'],
+  ['useContext', 'Hook to read a value from Context without prop drilling.'],
+  ['useReducer', 'Hook for state logic with multiple related actions.'],
   ['map()', 'Transforms every item in an array into something new.'],
   ['filter()', 'Returns only the array elements that match a condition.'],
+  ['reduce()', 'Folds an array down into a single accumulated value.'],
+  ['Closure', 'A function that remembers variables from where it was created.'],
   ['Middleware', 'A function that runs between an incoming request and the final response.'],
   ['req.body', 'Data sent in a POST/PUT request body.'],
   ['req.params', 'Dynamic values captured from the URL path (/users/:id).'],
@@ -637,9 +1031,14 @@ const cheatSheet = [
   ['JWT', 'A signed token used to authenticate a user across requests.'],
   ['Promise', "An object representing the eventual result of an async operation."],
   ['async / await', 'Cleaner syntax for working with Promises.'],
+  ['Event Loop', 'What lets Node run non-blocking I/O on a single thread.'],
+  ['CORS', 'Browser security rule controlling cross-origin requests.'],
   ['Express', 'A minimal web framework for building APIs in Node.js.'],
   ['res.json()', 'Sends a JSON response from an Express route.'],
   ['React Fragment', 'Groups elements without adding an extra DOM node (<>...</>).'],
+  ['React.memo', 'Skips re-rendering a component if its props are unchanged.'],
+  ['Error Boundary', 'A class component that catches render errors in its children.'],
+  ['debounce', 'Delays a function call until activity has paused for a bit.'],
 ];
 
 /* ============ STATE ============ */
@@ -669,7 +1068,6 @@ function activeList() {
 }
 
 function qKey(view, idx) { return view + '-' + idx; }
-
 function totalCount() { return nodeQuestions.length + reactQuestions.length; }
 
 function updateProgress() {
@@ -687,14 +1085,14 @@ function renderList() {
   document.querySelectorAll('.round-tab').forEach(btn => {
     const active = btn.dataset.view === currentView;
     btn.classList.toggle('bg-amber', active);
-    btn.classList.toggle('text-ink', active);
+    btn.classList.toggle('text-white', active);
     btn.classList.toggle('border-amber', active);
     btn.classList.toggle('font-semibold', active);
-    btn.classList.toggle('text-ivory', !active);
+    btn.classList.toggle('text-ink', !active);
   });
 
   if (currentView === 'sheet') {
-    nav.innerHTML = '<p class="text-xs text-muted font-mono px-1 leading-relaxed">Quick revision table — flip each card to check yourself before the round.</p>';
+    nav.innerHTML = '<p class="text-xs text-muted font-mono px-1 leading-relaxed">Quick revision table — flip each card to check yourself.</p>';
     return;
   }
 
@@ -713,10 +1111,10 @@ function renderList() {
     const isActive = realIdx === currentIndex;
 
     const item = document.createElement('button');
-    item.className = 'side-item shrink-0 md:w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-line bg-panel hover:border-amber/60 transition-colors' + (isActive ? ' active' : '') + (isDone ? ' is-done' : '');
+    item.className = 'side-item shrink-0 md:w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-line bg-white hover:border-amber/60 transition-colors' + (isActive ? ' active' : '') + (isDone ? ' is-done' : '');
     item.innerHTML = `
       <span class="num-badge shrink-0 w-6 h-6 rounded flex items-center justify-center text-[11px] font-mono font-semibold border border-line text-muted">${isDone ? '✓' : String(realIdx + 1).padStart(2, '0')}</span>
-      <span class="text-xs sm:text-[13px] leading-snug whitespace-nowrap md:whitespace-normal ${isDone ? 'text-muted' : 'text-ivory'}">${q.title}</span>
+      <span class="text-xs sm:text-[13px] leading-snug whitespace-nowrap md:whitespace-normal ${isDone ? 'text-muted' : 'text-ink'}">${q.title}</span>
     `;
     item.addEventListener('click', () => {
       currentIndex = realIdx;
@@ -746,21 +1144,21 @@ function renderMain() {
   const isDone = doneSet.has(key);
 
   main.innerHTML = `
-    <div class="bg-panel border border-line rounded-2xl p-5 sm:p-7">
+    <div class="bg-white border border-line rounded-2xl p-5 sm:p-7 shadow-sm">
       <div class="flex items-start justify-between gap-4 mb-4">
         <div>
-          <p class="font-mono text-xs text-amber tracking-widest mb-1.5">${currentView === 'react' ? 'ROUND 2 · REACT.JS' : 'ROUND 1 · NODE.JS'} — Q${String(currentIndex + 1).padStart(2, '0')}</p>
-          <h2 class="text-lg sm:text-xl font-semibold text-ivory">${q.title}</h2>
+          <p class="font-mono text-xs text-amber tracking-widest mb-1.5">${currentView === 'react' ? 'REACT.JS' : 'NODE.JS'} — Q${String(currentIndex + 1).padStart(2, '0')}</p>
+          <h2 class="text-lg sm:text-xl font-semibold text-ink">${q.title}</h2>
         </div>
-        <button id="doneToggle" class="shrink-0 font-mono text-xs px-3 py-2 rounded-lg border transition-colors ${isDone ? 'border-done text-done bg-done/10' : 'border-line text-muted hover:border-amber hover:text-amber'}">
+        <button id="doneToggle" class="shrink-0 font-mono text-xs px-3 py-2 rounded-lg border transition-colors ${isDone ? 'border-done text-done bg-doneSoft' : 'border-line text-muted hover:border-amber hover:text-amber'}">
           ${isDone ? '✓ Done' : 'Mark done'}
         </button>
       </div>
 
-      <p class="text-sm sm:text-[15px] text-ivory/90 leading-relaxed mb-5">${q.problem}</p>
+      <p class="text-sm sm:text-[15px] text-ink/90 leading-relaxed mb-5">${q.problem}</p>
 
       <div class="mb-4">
-        <button id="revealBtn" class="font-mono text-xs px-4 py-2.5 rounded-lg bg-amber text-ink font-semibold hover:bg-amber/90 transition-colors">
+        <button id="revealBtn" class="font-mono text-xs px-4 py-2.5 rounded-lg bg-amber text-white font-semibold hover:bg-amber/90 transition-colors">
           Show answer
         </button>
       </div>
@@ -773,16 +1171,16 @@ function renderMain() {
           </div>
           <pre class="p-4 overflow-x-auto"><code class="language-javascript" id="codeBlock"></code></pre>
         </div>
-        <div class="mt-3 flex gap-2.5 bg-panel2 border border-line rounded-lg px-4 py-3">
+        <div class="mt-3 flex gap-2.5 bg-amberSoft border border-amber/25 rounded-lg px-4 py-3">
           <span class="text-amber font-mono text-xs shrink-0 mt-0.5">note</span>
-          <p class="text-xs sm:text-[13px] text-muted leading-relaxed">${q.notes}</p>
+          <p class="text-xs sm:text-[13px] text-ink/70 leading-relaxed">${q.notes}</p>
         </div>
       </div>
 
       <div class="flex items-center justify-between mt-6 pt-5 border-t border-line">
-        <button id="prevBtn" class="font-mono text-xs px-3 py-2 rounded-lg border border-line text-muted hover:text-ivory hover:border-ivory/40 transition-colors disabled:opacity-30" ${currentIndex === 0 ? 'disabled' : ''}>&larr; Prev</button>
+        <button id="prevBtn" class="font-mono text-xs px-3 py-2 rounded-lg border border-line text-muted hover:text-ink hover:border-ink/30 transition-colors disabled:opacity-30" ${currentIndex === 0 ? 'disabled' : ''}>&larr; Prev</button>
         <span class="font-mono text-xs text-muted">${currentIndex + 1} of ${fullList.length}</span>
-        <button id="nextBtn" class="font-mono text-xs px-3 py-2 rounded-lg border border-line text-muted hover:text-ivory hover:border-ivory/40 transition-colors disabled:opacity-30" ${currentIndex === fullList.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
+        <button id="nextBtn" class="font-mono text-xs px-3 py-2 rounded-lg border border-line text-muted hover:text-ink hover:border-ink/30 transition-colors disabled:opacity-30" ${currentIndex === fullList.length - 1 ? 'disabled' : ''}>Next &rarr;</button>
       </div>
     </div>
   `;
@@ -820,7 +1218,7 @@ function renderSheet(main) {
   main.innerHTML = `
     <div class="mb-5">
       <p class="font-mono text-xs text-amber tracking-widest mb-1.5">CHEAT SHEET</p>
-      <h2 class="text-lg sm:text-xl font-semibold text-ivory">Last-minute revision — tap a card to flip</h2>
+      <h2 class="text-lg sm:text-xl font-semibold text-ink">Last-minute revision — tap a card to flip</h2>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5" id="sheetGrid"></div>
   `;
@@ -830,11 +1228,11 @@ function renderSheet(main) {
     card.className = 'flip-card h-28 cursor-pointer';
     card.innerHTML = `
       <div class="flip-inner relative w-full h-full">
-        <div class="flip-face absolute inset-0 bg-panel border border-line rounded-xl flex items-center justify-center px-4">
-          <p class="font-mono text-sm font-semibold text-ivory text-center">${term}</p>
+        <div class="flip-face absolute inset-0 bg-white border border-line rounded-xl flex items-center justify-center px-4 shadow-sm">
+          <p class="font-mono text-sm font-semibold text-ink text-center">${term}</p>
         </div>
-        <div class="flip-face flip-back absolute inset-0 bg-panel2 border border-amber/40 rounded-xl flex items-center justify-center px-4">
-          <p class="text-xs text-muted text-center leading-relaxed">${def}</p>
+        <div class="flip-face flip-back absolute inset-0 bg-amberSoft border border-amber/30 rounded-xl flex items-center justify-center px-4">
+          <p class="text-xs text-ink/70 text-center leading-relaxed">${def}</p>
         </div>
       </div>
     `;
@@ -874,7 +1272,7 @@ function formatTime(s) {
 function updateTimerDisplay() {
   const el = document.getElementById('timerDisplay');
   el.textContent = formatTime(timeLeft);
-  el.classList.toggle('text-red-400', timeLeft <= 60);
+  el.classList.toggle('text-red-500', timeLeft <= 60);
   el.classList.toggle('text-amber', timeLeft > 60);
 }
 
